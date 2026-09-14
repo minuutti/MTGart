@@ -138,6 +138,8 @@ function getRoute() {
 
 
 
+
+
 function loadInitialView() {
 
     const route = getRoute();
@@ -827,34 +829,49 @@ function openModal(
         <div class="reprints">
 
             ${cards.map(
-                card => `
+                card => {
+                    const setObj = sets.find(
+                        s => s.code === card.setCode
+                    );
+                    const setName = setObj 
+                        ? setObj.name 
+                        : card.setName;
+                    
+                    return `
+                        <div class="reprint">
 
-                    <div class="reprint">
+                            <strong>
+                                ${escapeHtml(
+                                    card.name
+                                )}
+                            </strong>
 
-                        <strong>
-                            ${escapeHtml(
-                                card.name
-                            )}
-                        </strong>
+                            <span>
+                                <a 
+                                    href="#" 
+                                    class="reprint-link"
+                                    data-set-code="${escapeHtml(card.setCode)}"
+                                    data-artwork-id="${escapeHtml(artwork.id)}"
+                                    onclick="event.preventDefault(); closeModal(); loadSetWithArtwork('${card.setCode}', '${artwork.id}');"
+                                >
+                                    ${escapeHtml(
+                                        setName
+                                    )}
+                                </a>
+                                ${
+                                    card.year
+                                    ? ` (${card.year})`
+                                    : ""
+                                }
+                                —
+                                ${escapeHtml(
+                                    card.rarity
+                                )}
+                            </span>
 
-                        <span>
-                            ${escapeHtml(
-                                card.setName
-                            )}
-                            ${
-                                card.year
-                                ? ` (${card.year})`
-                                : ""
-                            }
-                            —
-                            ${escapeHtml(
-                                card.rarity
-                            )}
-                        </span>
-
-                    </div>
-
-                `
+                        </div>
+                    `;
+                }
             ).join("")}
 
         </div>
@@ -865,6 +882,49 @@ function openModal(
     modal.classList.remove(
         "hidden"
     );
+}
+
+
+// ============================================================
+// LOAD SET WITH ARTWORK FILTER
+// ============================================================
+
+function loadSetWithArtwork(setCode, artworkId) {
+    
+    const set = findSet(setCode);
+    
+    if (!set) {
+        console.warn("Set not found:", setCode);
+        return;
+    }
+    
+    currentSet = set;
+    currentArtist = null;
+    
+    history.pushState(
+        {},
+        "",
+        setUrl(set.code)
+    );
+    
+    // Filter artworks to only show the specific artwork in this set
+    const filteredArtworks = artworks.filter(
+        artwork => 
+            artwork.id === artworkId && 
+            artwork.cards?.some(
+                card => card.setCode.toLowerCase() === set.code.toLowerCase()
+            )
+    );
+    
+    currentCards = filteredArtworks;
+    
+    const title = document.getElementById("title");
+    if (title) {
+        title.textContent = set.name;
+    }
+    
+    clearArtistInfo();
+    renderGrid(filteredArtworks);
 }
 
 
@@ -1247,6 +1307,8 @@ function setupSetSearch() {
 
 
 
+
+
 // ============================================================
 // CONTROLS
 // ============================================================
@@ -1404,8 +1466,6 @@ function escapeHtml(
             "&#039;"
         );
 }
-
-
 
 
 
