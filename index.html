@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MTG Artist Gallery</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+<header>
+
+    <a href="/mtgArt/" class="site-title">
+        MTG Artist Gallery
+    </a>
+
+    <div id="artist-controls">
+
+        <button id="random-artist">
+            Random Artist
+        </button>
+
+        <button id="search-artist">
+            Search Artist
+        </button>
+
+    </div>
+
+    <div id="set-controls">
+
+        <button id="random-set">
+            Random Set
+        </button>
+
+        <button id="search-set">
+            Search Set
+        </button>
+
+    </div>
+
+</header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main>
+
+        <!-- Artist information -->
+
+        <section
+            id="artistInfo"
+            class="artistInfo"
+        >
+        </section>
+
+
+        <!-- Page title -->
+
+        <section class="page-heading">
+
+            <h1 id="title">
+                MTG Artist Gallery
+            </h1>
+
+        </section>
+
+
+        <!-- =================================================
+             ARTWORK GRID
+        ================================================== -->
+
+        <section
+            id="gallery"
+            class="gallery"
+        >
+
+            <div
+                id="grid-loading"
+                class="grid-loading hidden"
+            >
+
+                <div class="spinner"></div>
+
+                <p>
+                    Loading artwork...
+                </p>
+
+            </div>
+
+
+            <div
+                id="grid"
+                class="grid"
+            >
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         ARTWORK MODAL
+    ====================================================== -->
+
+    <div
+        id="modal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeModal()"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div class="modal-artwork">
+
+                <img
+                    id="modal-img"
+                    src=""
+                    alt="Artwork"
+                >
+
+            </div>
+
+
+            <div
+                id="modal-info"
+                class="modal-info"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ARTIST AND SET SEARCH MODAL
+    ====================================================== -->
+
+    <div
+        id="ArtistSearchModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content artist-search-modal">
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeArtistSearch()"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <h2>
+                Search Artist
+            </h2>
+
+
+            <input
+                id="artist-search"
+                type="search"
+                placeholder="Search artist..."
+                autocomplete="off"
+            >
+
+
+            <div
+                id="artist-list"
+                class="artist-list"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+<div id="SetSearchModal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <button
+            class="modal-close"
+            onclick="closeSetSearch()"
+        >
+            &times;
+        </button>
+
+        <h2>Search Set</h2>
+
+        <input
+            type="text"
+            id="set-search"
+            placeholder="Search sets..."
+            autocomplete="off"
+        >
+
+        <div id="set-list"></div>
+
+    </div>
+
+</div>    
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="app.js"
+    ></script>
+
+</body>
+
+</html>
