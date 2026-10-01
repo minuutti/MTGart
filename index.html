@@ -23,15 +23,6 @@
 <header>
     <div id="site-title">
         MTG ART
-        <section
-            id="artistInfo"
-            class="artistInfo"
-        >
-        </section>
-
-
-        <!-- Page title -->
-
         <section class="page-heading">
 
             <h1 id="title">
@@ -39,13 +30,6 @@
             </h1>
 
         </section>
-
-
-        <!-- Page title -->
-
-        <section class="page-heading">
-
-        </section>         
     </div>
     <div id="controls">
         <div id="artist-controls">
@@ -92,7 +76,18 @@
 
     <main>
 
-  
+        <!-- =================================================
+             ARTIST NAME & INFO BUTTON
+        ================================================== -->
+
+        <section id="artist-header" class="artist-header-section hidden">
+            <div class="artist-header-content">
+                <h2 id="artist-name"></h2>
+                <button id="artist-info-btn" class="artist-info-button">
+                    Artist Info
+                </button>
+            </div>
+        </section>
 
 
         <!-- =================================================
@@ -159,6 +154,34 @@
 
                 <div id="modal-info" class="modal-info">
                 </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ARTIST INFO MODAL
+    ====================================================== -->
+
+    <div
+        id="artist-info-modal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content artist-info-modal-content">
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeArtistInfoModal()"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+            <div id="artist-info-content" class="artist-info-content">
             </div>
 
         </div>
