@@ -6,7 +6,11 @@ let currentArtist = null;
 let currentSet = null;
 let currentCards = [];
 
-const artistInfoEl = document.getElementById("artistInfo");
+const artistHeaderEl = document.getElementById("artist-header");
+const artistNameEl = document.getElementById("artist-name");
+const artistInfoBtnEl = document.getElementById("artist-info-btn");
+const artistInfoModalEl = document.getElementById("artist-info-modal");
+const artistInfoContentEl = document.getElementById("artist-info-content");
 
 
 // ============================================================
@@ -75,36 +79,6 @@ async function loadData() {
 // URL ROUTING
 // ============================================================
 
-
-
-/* PREVIOUS SETUP
-function getRoute() {
-
-    const path = window.location.pathname
-        .replace(/^\/+|\/+$/g, "");
-
-    if (!path) {
-        return {
-            type: "home"
-        };
-    }
-
-    const parts = path.split("/");
-
-    const type = parts[0];
-
-    const value = parts
-        .slice(1)
-        .join("/");
-
-    return {
-        type,
-        value: decodeURIComponent(value)
-    };
-}
-*/
-
-// LOCAL SETUP
 const BASE_PATH = "/MTGart";
 
 function getRoute() {
@@ -129,14 +103,6 @@ function getRoute() {
         value: ""
     };
 }
-
-
-
-
-
-
-
-
 
 function loadInitialView() {
     const route = getRoute();
@@ -191,40 +157,6 @@ function navigate(url) {
 window.addEventListener("popstate", () => {
     loadInitialView();
 });
-
-
-/* previous setup
-
-function artistUrl(artist) {
-
-    return `/artist/${slugify(artist.name)}`;
-}
-
-
-function setUrl(setCode) {
-
-    return `/set/${encodeURIComponent(setCode)}`;
-}
-*/
-
-function navigate(url) {
-
-    history.pushState(
-        {},
-        "",
-        url
-    );
-
-    loadInitialView();
-}
-
-
-window.addEventListener(
-    "popstate",
-    () => {
-        loadInitialView();
-    }
-);
 
 
 // ============================================================
@@ -352,8 +284,6 @@ function loadArtist(
         artist,
         artistArtworks
     );
-
-    //updateArtistControls();
 }
 
 
@@ -361,46 +291,45 @@ function loadArtist(
 // ARTIST INFO
 // ============================================================
 
-function renderArtistInfo(
-    artist
-) {
-
-    if (!artistInfoEl) {
+function renderArtistInfo(artist) {
+    if (!artistHeaderEl || !artistNameEl) {
         return;
     }
 
-    artistInfoEl.innerHTML = `
-        <div class="artist-header">
+    artistHeaderEl.classList.remove("hidden");
+    artistNameEl.textContent = artist.name;
+
+    if (!artistInfoContentEl) {
+        return;
+    }
+
+    artistInfoContentEl.innerHTML = `
+        <div class="artist-info-card">
 
             ${
                 artist.portrait
-                ? `
-                    <img
-                        src="${artist.portrait}"
-                        alt="${escapeHtml(
-                            artist.name
-                        )}"
-                    >
-                `
-                : ""
+                    ? `
+                        <img
+                            src="${artist.portrait}"
+                            alt="${escapeHtml(artist.name)}"
+                            class="artist-info-portrait"
+                        >
+                    `
+                    : ""
             }
 
-            <div>
+            <div class="artist-info-copy">
 
-                <h1>
-                    ${escapeHtml(
-                        artist.name
-                    )}
-                </h1>
+                <h3>
+                    ${escapeHtml(artist.name)}
+                </h3>
 
                 ${
                     artist.dateOfBirth
                     ? `
                         <p>
                             <strong>Born:</strong>
-                            ${escapeHtml(
-                                artist.dateOfBirth
-                            )}
+                            ${escapeHtml(artist.dateOfBirth)}
                         </p>
                     `
                     : ""
@@ -411,9 +340,7 @@ function renderArtistInfo(
                     ? `
                         <p>
                             <strong>Location:</strong>
-                            ${escapeHtml(
-                                artist.location
-                            )}
+                            ${escapeHtml(artist.location)}
                         </p>
                     `
                     : ""
@@ -423,18 +350,11 @@ function renderArtistInfo(
                     artist.firstArtYear
                     ? `
                         <p>
-                            <strong>
-                                First Magic art:
-                            </strong>
+                            <strong>First Magic art:</strong>
                             ${artist.firstArtYear}
                             ${
                                 artist.firstArtSet
-                                ? `
-                                    —
-                                    ${escapeHtml(
-                                        artist.firstArtSet
-                                    )}
-                                `
+                                ? ` — ${escapeHtml(artist.firstArtSet)}`
                                 : ""
                             }
                         </p>
@@ -446,9 +366,7 @@ function renderArtistInfo(
                     artist.bio
                     ? `
                         <p>
-                            ${escapeHtml(
-                                artist.bio
-                            )}
+                            ${escapeHtml(artist.bio)}
                         </p>
                     `
                     : ""
@@ -458,6 +376,27 @@ function renderArtistInfo(
 
         </div>
     `;
+}
+
+
+// ============================================================
+// ARTIST INFO MODAL
+// ============================================================
+
+function openArtistInfoModal() {
+    if (!artistInfoModalEl) {
+        return;
+    }
+
+    artistInfoModalEl.classList.remove("hidden");
+}
+
+function closeArtistInfoModal() {
+    if (!artistInfoModalEl) {
+        return;
+    }
+
+    artistInfoModalEl.classList.add("hidden");
 }
 
 
@@ -592,8 +531,6 @@ function loadSet(
     renderGrid(
         setArtworks
     );
-
-    //updateSetControls();
 }
 
 
@@ -603,8 +540,16 @@ function loadSet(
 
 function clearArtistInfo() {
 
-    if (artistInfoEl) {
-        artistInfoEl.innerHTML = "";
+    if (artistHeaderEl) {
+        artistHeaderEl.classList.add("hidden");
+    }
+
+    if (artistNameEl) {
+        artistNameEl.textContent = "";
+    }
+
+    if (artistInfoContentEl) {
+        artistInfoContentEl.innerHTML = "";
     }
 }
 
@@ -1269,98 +1214,6 @@ function setupSetSearch() {
 }
 
 
-
-
-
-
-
-
-
-// ============================================================
-// CONTROLS
-// ============================================================
-/*
-function updateArtistControls() {
-
-    const artist =
-        document.getElementById(
-            "artist-controls"
-        );
-
-    if (artist) {
-        artist.classList.remove(
-            "hidden"
-        );
-    }
-}
-
-
-function updateSetControls() {
-
-    const artist =
-        document.getElementById(
-            "artist-controls"
-        );
-
-    if (artist) {
-        artist.classList.add(
-            "hidden"
-        );
-    }
-}
-*/
-
-// ============================================================
-// SET SELECT
-// ============================================================
-
-function loadAllSets() {
-
-    const select =
-        document.getElementById(
-            "set-select"
-        );
-
-    if (!select) {
-        return;
-    }
-
-    select.innerHTML =
-        `<option value="">
-            Select Set
-        </option>`;
-
-
-    sets
-        .slice()
-        .sort(
-            (a, b) =>
-                a.name.localeCompare(
-                    b.name
-                )
-        )
-        .forEach(
-            set => {
-
-                const option =
-                    document.createElement(
-                        "option"
-                    );
-
-                option.value =
-                    set.code;
-
-                option.textContent =
-                    set.name;
-
-                select.appendChild(
-                    option
-                );
-            }
-        );
-}
-
-
 // ============================================================
 // LOADING
 // ============================================================
@@ -1461,6 +1314,20 @@ document.getElementById("random-set")?.addEventListener(
         "click",
         loadRandomSet
     );
+
+artistInfoBtnEl?.addEventListener(
+    "click",
+    openArtistInfoModal
+);
+
+artistInfoModalEl?.addEventListener(
+    "click",
+    event => {
+        if (event.target === artistInfoModalEl) {
+            closeArtistInfoModal();
+        }
+    }
+);
 
 
 
