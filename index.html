@@ -5,17 +5,11 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>MTG Artist Gallery</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -27,46 +21,8 @@
     ====================================================== -->
 
 <header>
-
-    <a href="/mtgArt/" class="site-title">
-        MTG Artist Gallery
-    </a>
-
-    <div id="artist-controls">
-
-        <button id="random-artist">
-            Random Artist
-        </button>
-
-        <button id="search-artist">
-            Search Artist
-        </button>
-
-    </div>
-
-    <div id="set-controls">
-
-        <button id="random-set">
-            Random Set
-        </button>
-
-        <button id="search-set">
-            Search Set
-        </button>
-
-    </div>
-
-</header>
-
-
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
-    <main>
-
-        <!-- Artist information -->
-
+    <div id="site-title">
+        MTG ART
         <section
             id="artistInfo"
             class="artistInfo"
@@ -83,6 +39,60 @@
             </h1>
 
         </section>
+
+
+        <!-- Page title -->
+
+        <section class="page-heading">
+
+        </section>         
+    </div>
+    <div id="controls">
+        <div id="artist-controls">
+
+            <button id="random-artist">
+                Random Artist
+            </button>
+
+            <button id="search-artist">
+                Search Artist
+            </button>
+
+        </div>
+
+        <div id="set-controls">
+
+            <button id="random-set">
+                Random Set
+            </button>
+
+            <button id="search-set">
+                Search Set
+            </button>
+
+        </div>
+
+        <div id="nav-controls">
+
+                <button id="random-set">
+                    About
+                </button>
+
+        </div>
+    </div>
+
+
+
+</header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main>
+
+  
 
 
         <!-- =================================================
@@ -139,22 +149,16 @@
                 ×
             </button>
 
+            <div class="art-container">
+                <div class="modal-artwork">
 
-            <div class="modal-artwork">
+                    <img id="modal-img" src="" alt="Artwork">
 
-                <img
-                    id="modal-img"
-                    src=""
-                    alt="Artwork"
-                >
-
-            </div>
+                </div>
 
 
-            <div
-                id="modal-info"
-                class="modal-info"
-            >
+                <div id="modal-info" class="modal-info">
+                </div>
             </div>
 
         </div>
@@ -238,9 +242,7 @@
          JAVASCRIPT
     ====================================================== -->
 
-    <script
-        src="app.js"
-    ></script>
+    <script src="app.js"></script>
 
 </body>
 
