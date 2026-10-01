@@ -105,7 +105,7 @@ function getRoute() {
 */
 
 // LOCAL SETUP
-const BASE_PATH = "/MTGart-main";
+const BASE_PATH = "/MTGart";
 
 function getRoute() {
     const params = new URLSearchParams(window.location.search);
@@ -129,6 +129,8 @@ function getRoute() {
         value: ""
     };
 }
+
+
 
 
 
@@ -1265,6 +1267,7 @@ function setupSetSearch() {
         }
     );
 }
+
 
 
 
