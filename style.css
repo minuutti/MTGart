@@ -70,6 +70,7 @@ body {
 #ArtistModal.showThis {
   display: flex;
 }
+
 /* MODAL */
 .modal {
   position: fixed;
@@ -78,6 +79,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2000;
 }
 
 .hidden {
@@ -89,6 +91,22 @@ body {
   height: 95%;
   background: #222;
   position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 30px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 10px;
+}
+
+.modal-close:hover {
+  opacity: 0.8;
 }
 
 .close {
@@ -137,10 +155,6 @@ body {
   margin-bottom: 16px;
 }
 
-.hidden {
-  display: none;
-}
-
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -179,13 +193,6 @@ body {
   object-position: center center;
 
   display: block;
-}
-
-.imageWrapper {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: #222;
 }
 
 .imageWrapper.loading::before {
@@ -259,10 +266,17 @@ header {
   background: #111;
   padding: 10px 20px;
   box-sizing: border-box;
+  border-bottom: 1px solid #333;
 }
 
 main {
   padding-top: 80px;
+}
+
+#site-title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 #controls{
@@ -275,10 +289,16 @@ main {
    ARTIST SEARCH MODAL
 ========================= */
 
+.artist-search-modal {
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
 .artistSearchModal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 2000;
 
   display: flex;
   justify-content: center;
@@ -333,7 +353,8 @@ main {
    SEARCH INPUT
 ========================= */
 
-#artist-search {
+#artist-search,
+#set-search {
   width: 100%;
 
   padding: 14px 16px;
@@ -351,7 +372,8 @@ main {
   outline: none;
 }
 
-#artist-search:focus {
+#artist-search:focus,
+#set-search:focus {
   border-color: #777;
 }
 
@@ -360,7 +382,8 @@ main {
    ARTIST RESULTS
 ========================= */
 
-#artist-list {
+#artist-list,
+#set-list {
   margin-top: 15px;
 
   max-height: 500px;
@@ -369,7 +392,8 @@ main {
 }
 
 
-.artist-result {
+.artist-search-item,
+.set-search-item {
   padding: 12px 14px;
 
   border-radius: 6px;
@@ -380,7 +404,8 @@ main {
 }
 
 
-.artist-result:hover {
+.artist-search-item:hover,
+.set-search-item:hover {
   background: #2a2a2a;
 }
 
@@ -392,8 +417,12 @@ header button{
   color: #fff;
   padding: 15px;
   border-radius: 20px;
-  border-style: solid 1px;
-  border-color: #777;
+  border: 1px solid #777;
+  cursor: pointer;
+}
+
+header button:hover {
+  background-color: #222;
 }
 
 /********* BUTTON *****************/
@@ -435,9 +464,71 @@ header button{
    Artist Modal
 ========================= */
 
-artistInfo
+.artistInfo {
+}
 
+.artist-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
 
+.artist-header img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.artist-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.artist-header p {
+  margin: 5px 0;
+  color: #ccc;
+}
+
+.reprints {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reprint {
+  padding: 10px;
+  background: #111;
+  border-radius: 6px;
+  border-left: 3px solid #666;
+}
+
+.reprint strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.reprint span {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.reprint a {
+  color: #4a9eff;
+  text-decoration: none;
+}
+
+.reprint a:hover {
+  text-decoration: underline;
+}
+
+.card-preview {
+  margin: 15px 0;
+  padding: 15px;
+  background: #111;
+  border-radius: 6px;
+  text-align: center;
+}
 
 
 /* =========================
@@ -452,6 +543,19 @@ artistInfo
 
   .artistSearchContent {
     padding: 24px 18px;
+  }
+
+  .artist-header {
+    flex-direction: column;
+  }
+
+  header {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  main {
+    padding-top: 150px;
   }
 
 }
