@@ -5,10 +5,6 @@ body {
   color: white;
 }
 
-main {
-  padding-top: 140px;
-}
-
 .layout {
   display: flex;
 }
@@ -48,7 +44,7 @@ main {
   border-radius: 6px;
 }
 
-#ArtistModal {
+#ArtistModal{
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
@@ -64,18 +60,16 @@ main {
   position: relative;
 }
 
-.art-container {
+.art-container{
   display: flex;
 }
 
 #ArtistModal.hideThis {
   display: none;
 }
-
 #ArtistModal.showThis {
   display: flex;
 }
-
 /* MODAL */
 .modal {
   position: fixed;
@@ -125,11 +119,11 @@ main {
   object-fit: contain;
 }
 
-.modal-artwork {
+.modal-artwork{
   width: 100%;
 }
 
-.modal-info {
+.modal-info{
   max-width: 400px;
 }
 
@@ -162,13 +156,16 @@ main {
   cursor: pointer;
 }
 
+
 .imageWrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
+
   overflow: hidden;
   border-radius: 8px;
   background: #222;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,8 +174,10 @@ main {
 .imageWrapper img {
   width: 100%;
   height: 100%;
+
   object-fit: cover;
   object-position: center center;
+
   display: block;
 }
 
@@ -196,41 +195,54 @@ main {
   background: #333;
 }
 
+
 .grid-loading {
   position: fixed;
   inset: 0;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   gap: 12px;
+
   background: rgba(0, 0, 0, 0.75);
+
   z-index: 9999;
   display: none;
 }
 
-.SpinnerHidden {
+.SpinnerHidden{
   display: none;
 }
 
 .spinner {
   width: 60px;
   height: 60px;
+
   border: 6px solid #444;
   border-top: 6px solid white;
+
   border-radius: 50%;
+
   animation: spin 1s linear infinite;
 }
 
-#ArtistSearchModal.hidden {
+
+#ArtistSearchModal.hidden{
   display: none;
 }
 
-/* CARD INFO */
-.previewImage {
+
+
+/*CARD INFO */
+
+.previewImage{
   width: 100%;
   border-radius: 30px;
 }
+
 
 /* =========================
    HEADER
@@ -244,11 +256,20 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
+  background: #111;
+  padding: 10px 20px;
+  box-sizing: border-box;
 }
 
-#controls {
-  display: flex;
+main {
+  padding-top: 80px;
 }
+
+#controls{
+  display: flex;
+  gap: 10px;
+}
+
 
 /* =========================
    ARTIST SEARCH MODAL
@@ -258,18 +279,25 @@ header {
   position: fixed;
   inset: 0;
   z-index: 1000;
+
   display: flex;
   justify-content: center;
   align-items: flex-start;
+
   padding: 60px 20px;
+
   background: rgba(0, 0, 0, 0.75);
+
   overflow-y: auto;
 }
 
+
 /* Hidden state */
+
 .artistSearchModal.hidden {
   display: none;
 }
+
 
 /* =========================
    SEARCH WINDOW
@@ -277,14 +305,20 @@ header {
 
 .artistSearchContent {
   position: relative;
+
   width: 100%;
   max-width: 600px;
+
   padding: 30px;
+
   background: #181818;
   border-radius: 12px;
+
   box-sizing: border-box;
+
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
+
 
 /* =========================
    TITLE
@@ -294,19 +328,26 @@ header {
   margin: 0 0 20px;
 }
 
+
 /* =========================
    SEARCH INPUT
 ========================= */
 
 #artist-search {
   width: 100%;
+
   padding: 14px 16px;
+
   box-sizing: border-box;
+
   border: 1px solid #444;
   border-radius: 6px;
+
   background: #222;
   color: #fff;
+
   font-size: 18px;
+
   outline: none;
 }
 
@@ -314,30 +355,39 @@ header {
   border-color: #777;
 }
 
+
 /* =========================
    ARTIST RESULTS
 ========================= */
 
 #artist-list {
   margin-top: 15px;
+
   max-height: 500px;
+
   overflow-y: auto;
 }
 
+
 .artist-result {
   padding: 12px 14px;
+
   border-radius: 6px;
+
   cursor: pointer;
+
   color: #fff;
 }
+
 
 .artist-result:hover {
   background: #2a2a2a;
 }
 
+
 /********* BUTTON *****************/
 
-header button {
+header button{
   background-color: #111;
   color: #fff;
   padding: 15px;
@@ -346,22 +396,33 @@ header button {
   border-color: #777;
 }
 
+/********* BUTTON *****************/
+
+
+
+
 /* =========================
    CLOSE BUTTON
 ========================= */
 
 .artistSearchClose {
   position: absolute;
+
   top: 12px;
   right: 12px;
+
   width: 36px;
   height: 36px;
+
   border: none;
   border-radius: 50%;
+
   background: transparent;
   color: #fff;
+
   font-size: 28px;
   line-height: 1;
+
   cursor: pointer;
 }
 
@@ -369,18 +430,22 @@ header button {
   background: #333;
 }
 
+
 /* =========================
    Artist Modal
 ========================= */
 
-artistInfo {
-}
+artistInfo
+
+
+
 
 /* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 600px) {
+
   .artistSearchModal {
     padding: 20px 10px;
   }
@@ -388,7 +453,11 @@ artistInfo {
   .artistSearchContent {
     padding: 24px 18px;
   }
+
 }
+
+
+
 
 @keyframes spin {
   to {
