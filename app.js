@@ -6,8 +6,7 @@ let currentArtist = null;
 let currentSet = null;
 let currentCards = [];
 
-const artistHeaderEl = document.getElementById("artist-header");
-const artistNameEl = document.getElementById("artist-name");
+const artistInfoSectionEl = document.getElementById("artist-info-section");
 const artistInfoBtnEl = document.getElementById("artist-info-btn");
 const artistInfoModalEl = document.getElementById("artist-info-modal");
 const artistInfoContentEl = document.getElementById("artist-info-content");
@@ -292,17 +291,18 @@ function loadArtist(
 // ============================================================
 
 function renderArtistInfo(artist) {
-    if (!artistHeaderEl || !artistNameEl) {
+    if (!artistInfoSectionEl) {
         return;
     }
 
-    artistHeaderEl.classList.remove("hidden");
-    artistNameEl.textContent = artist.name;
+    // Show the artist info section (button)
+    artistInfoSectionEl.classList.remove("hidden");
 
     if (!artistInfoContentEl) {
         return;
     }
 
+    // Populate the modal content
     artistInfoContentEl.innerHTML = `
         <div class="artist-info-card">
 
@@ -540,12 +540,8 @@ function loadSet(
 
 function clearArtistInfo() {
 
-    if (artistHeaderEl) {
-        artistHeaderEl.classList.add("hidden");
-    }
-
-    if (artistNameEl) {
-        artistNameEl.textContent = "";
+    if (artistInfoSectionEl) {
+        artistInfoSectionEl.classList.add("hidden");
     }
 
     if (artistInfoContentEl) {
