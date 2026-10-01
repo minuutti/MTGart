@@ -43,10 +43,6 @@ Requirements:
 - [ ] The top navigation is not visible when scrolling down
 - [ ] The top navigation header becomes visible when scrolling up
 
-
-
-
-
 ---
 
 ## PER-001 — Remove unused CSS Styles
@@ -57,8 +53,8 @@ Requirements:
 
 --------
 
-
 BUGS
 
 ## BUG-001 - The image grid is below the navigation
-- [ ] The image grid should have padding or margin so it's not below the header/navigation
+- [x] The image grid should have padding or margin so it's not below the header/navigation
+```
