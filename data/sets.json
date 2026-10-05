@@ -1122,7 +1122,7 @@
   {
     "code": "fdc",
     "name": "Foundations Commander",
-    "year": 2024
+    "year": 2026
   },
   {
     "code": "ffdn",
@@ -2030,6 +2030,11 @@
     "year": 2026
   },
   {
+    "code": "pf27",
+    "name": "MagicFest 2027",
+    "year": 2027
+  },
+  {
     "code": "mom",
     "name": "March of the Machine",
     "year": 2023
@@ -2580,6 +2585,11 @@
     "year": 2026
   },
   {
+    "code": "pfra",
+    "name": "Reality Fracture Promos",
+    "year": 2026
+  },
+  {
     "code": "prcq",
     "name": "Regional Championship Qualifiers 2022",
     "year": 2023
@@ -2982,7 +2992,7 @@
   {
     "code": "pbig",
     "name": "The Big Score Promos",
-    "year": 2025
+    "year": 2026
   },
   {
     "code": "bro",
