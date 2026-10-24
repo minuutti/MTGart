@@ -95,9 +95,10 @@ The application uses locally generated JSON data.
 
 Primary data sources:
 
-- `artists.json`
-- `data/artworks.json`
+- `data/artists.json`
 - `data/sets.json`
+- `data/artists/<slug>.json` (artist shards)
+- `data/sets/<code>.json` (set shards)
 
 Scryfall bulk card data is processed locally to generate artwork and set data.
 

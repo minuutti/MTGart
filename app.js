@@ -1,6 +1,9 @@
 let artists = [];
-let artworks = [];
 let sets = [];
+let artistSlugOverrides = {};
+
+const artistCache = new Map();
+const setCache = new Map();
 
 let currentArtist = null;
 let currentSet = null;
@@ -20,19 +23,16 @@ async function loadData() {
 
     try {
 
-        const [artistsRes, artworksRes, setsRes] =
+        const [artistsRes, setsRes, manifestRes] =
             await Promise.all([
                 fetch("./data/artists.json"),
-                fetch("./data/artworks.json"),
-                fetch("./data/sets.json")
+                fetch("./data/sets.json"),
+                fetch("./data/manifest.json")
+                    .catch(() => null)
             ]);
 
         if (!artistsRes.ok) {
             throw new Error("Could not load artists.json");
-        }
-
-        if (!artworksRes.ok) {
-            throw new Error("Could not load artworks.json");
         }
 
         if (!setsRes.ok) {
@@ -40,15 +40,16 @@ async function loadData() {
         }
 
         artists = await artistsRes.json();
-        artworks = await artworksRes.json();
         sets = await setsRes.json();
+
+        if (manifestRes && manifestRes.ok) {
+            const manifest = await manifestRes.json();
+            artistSlugOverrides =
+                manifest.artistSlugOverrides || {};
+        }
 
         console.log(
             `Loaded ${artists.length} artists`
-        );
-
-        console.log(
-            `Loaded ${artworks.length} artworks`
         );
 
         console.log(
@@ -138,6 +139,90 @@ function slugify(value) {
         .trim()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
+}
+
+function artistShardSlug(artistOrSlug) {
+
+    if (typeof artistOrSlug === "string") {
+        return slugify(artistOrSlug);
+    }
+
+    return artistSlugOverrides[artistOrSlug.name]
+        || slugify(artistOrSlug.name);
+}
+
+async function fetchJson(url) {
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        const error = new Error(
+            `Could not load ${url}`
+        );
+        error.status = response.status;
+        throw error;
+    }
+
+    return response.json();
+}
+
+function cachedFetch(cache, key, url, fallback) {
+
+    if (!cache.has(key)) {
+
+        const promise = fetchJson(url).catch(error => {
+
+            cache.delete(key);
+
+            if (fallback && error.status === 404) {
+                return fallback;
+            }
+
+            throw error;
+        });
+
+        cache.set(key, promise);
+    }
+
+    return cache.get(key);
+}
+
+function getArtistArtworks(artistOrSlug) {
+
+    const slug = artistShardSlug(artistOrSlug);
+
+    return cachedFetch(
+        artistCache,
+        slug,
+        `./data/artists/${encodeURIComponent(slug)}.json`,
+        []
+    );
+}
+
+function getSetEntries(setCode) {
+
+    const code = setCode.toLowerCase();
+
+    return cachedFetch(
+        setCache,
+        code,
+        `./data/sets/${encodeURIComponent(code)}.json`
+    );
+}
+
+function showGridError(message) {
+
+    hideGridLoading();
+
+    const grid = document.getElementById("grid");
+
+    if (grid) {
+        grid.innerHTML = `
+            <p class="error">
+                ${escapeHtml(message)}
+            </p>
+        `;
+    }
 }
 
 function artistUrl(artist) {
@@ -240,7 +325,7 @@ function loadRandomArtist(updateUrl = true) {
 // ARTIST VIEW
 // ============================================================
 
-function loadArtist(
+async function loadArtist(
     artist,
     updateUrl = true
 ) {
@@ -261,16 +346,32 @@ function loadArtist(
         );
     }
 
-    const artistName =
-        artist.name;
+    showGridLoading();
 
-    const artistArtworks =
-        artworks.filter(
-            artwork =>
-                artwork.artist
-                .toLowerCase()
-                === artistName.toLowerCase()
-        );
+    let artistArtworks;
+
+    try {
+
+        artistArtworks =
+            await getArtistArtworks(artist);
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (currentArtist === artist) {
+            showGridError(
+                "Failed to load artworks."
+            );
+        }
+
+        return;
+    }
+
+    // Ignore stale responses if the user navigated meanwhile.
+    if (currentArtist !== artist) {
+        return;
+    }
 
     currentCards =
         artistArtworks;
@@ -469,7 +570,7 @@ function loadRandomSet() {
 // SET VIEW
 // ============================================================
 
-function loadSet(
+async function loadSet(
     setCode,
     updateUrl = true
 ) {
@@ -500,17 +601,32 @@ function loadSet(
         );
     }
 
-    const setArtworks =
-        artworks.filter(
-            artwork =>
-                artwork.cards?.some(
-                    card =>
-                        card.setCode
-                        .toLowerCase()
-                        ===
-                        set.code.toLowerCase()
-                )
-        );
+    showGridLoading();
+
+    let setArtworks;
+
+    try {
+
+        setArtworks =
+            await getSetEntries(set.code);
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (currentSet === set) {
+            clearArtistInfo();
+            showGridError(
+                "Failed to load artworks."
+            );
+        }
+
+        return;
+    }
+
+    if (currentSet !== set) {
+        return;
+    }
 
     currentCards =
         setArtworks;
@@ -622,7 +738,7 @@ function renderGrid(artworkList) {
 // MODAL
 // ============================================================
 
-function openModal(
+async function openModal(
     artwork
 ) {
 
@@ -633,6 +749,30 @@ function openModal(
 
     if (!modal) {
         return;
+    }
+
+    // Set shard entries are slim; resolve the full artwork
+    // (with cards/reprints) from the artist shard.
+    if (!artwork.cards) {
+
+        try {
+
+            const artistArtworks =
+                await getArtistArtworks(
+                    artwork.artistSlug
+                    || artwork.artist
+                );
+
+            artwork =
+                artistArtworks.find(
+                    item =>
+                        item.id === artwork.id
+                ) || artwork;
+
+        } catch (error) {
+
+            console.error(error);
+        }
     }
 
     const sample =
@@ -796,7 +936,7 @@ function openModal(
 // LOAD SET WITH ARTWORK FILTER
 // ============================================================
 
-function loadSetWithArtwork(setCode, artworkId) {
+async function loadSetWithArtwork(setCode, artworkId) {
     
     const set = findSet(setCode);
     
@@ -814,17 +954,37 @@ function loadSetWithArtwork(setCode, artworkId) {
         setUrl(set.code)
     );
     
-    // Filter artworks to only show the specific artwork in this set
-    const filteredArtworks = artworks.filter(
-        artwork => 
-            artwork.id === artworkId && 
-            artwork.cards?.some(
-                card => card.setCode.toLowerCase() === set.code.toLowerCase()
-            )
-    );
-    
+    showGridLoading();
+
+    let filteredArtworks;
+
+    try {
+
+        const entries = await getSetEntries(set.code);
+
+        // Only show the specific artwork in this set
+        filteredArtworks = entries.filter(
+            entry => entry.id === artworkId
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (currentSet === set) {
+            clearArtistInfo();
+            showGridError("Failed to load artworks.");
+        }
+
+        return;
+    }
+
+    if (currentSet !== set) {
+        return;
+    }
+
     currentCards = filteredArtworks;
-    
+
     const title = document.getElementById("title");
     if (title) {
         title.textContent = set.name;
