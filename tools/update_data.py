@@ -1,6 +1,10 @@
+import hashlib
 import json
 import os
+import re
+import shutil
 import sys
+from datetime import datetime, timezone
 
 
 # ============================================================
@@ -25,10 +29,27 @@ OUTPUT_DIR = os.path.join(
     "data"
 )
 
-ARTWORKS_FILE = os.path.join(
+ARTIST_SHARD_DIR = os.path.join(
+    OUTPUT_DIR,
+    "artists"
+)
+
+SET_SHARD_DIR = os.path.join(
+    OUTPUT_DIR,
+    "sets"
+)
+
+MANIFEST_FILE = os.path.join(
+    OUTPUT_DIR,
+    "manifest.json"
+)
+
+LEGACY_ARTWORKS_FILE = os.path.join(
     OUTPUT_DIR,
     "artworks.json"
 )
+
+SCRIPT_VERSION = 2
 
 SETS_FILE = os.path.join(
     OUTPUT_DIR,
@@ -678,7 +699,12 @@ def sort_artworks(artworks):
                 "firstYear"
             )
             if artwork.get("firstYear")
-            else 9999
+            else 9999,
+
+            artwork.get(
+                "id",
+                ""
+            )
         )
     )
 
@@ -709,6 +735,72 @@ def sort_sets(sets):
 
 
 # ============================================================
+# SLUGS
+# ============================================================
+
+def slugify(value):
+
+    # Must match slugify() in app.js
+
+    value = value.lower().strip()
+
+    value = re.sub(
+        r"[^a-z0-9]+",
+        "-",
+        value
+    )
+
+    return re.sub(
+        r"^-+|-+$",
+        "",
+        value
+    )
+
+
+def build_artist_slugs(artworks_list):
+
+    # --------------------------------------------------------
+    # Maps artist name -> shard slug. Names are processed in
+    # sorted order so the result is deterministic. If two
+    # different names share a slug, later ones get a stable
+    # suffix derived from the name.
+    # --------------------------------------------------------
+
+    names = sorted({
+        artwork["artist"]
+        for artwork in artworks_list
+    })
+
+    slugs = {}
+    used = {}
+
+    for name in names:
+
+        base = slugify(name) or "artist"
+
+        slug = base
+
+        if slug in used:
+
+            digest = hashlib.sha1(
+                name.encode("utf-8")
+            ).hexdigest()[:6]
+
+            slug = f"{base}-{digest}"
+
+            print(
+                f"Slug collision: "
+                f"{name!r} / {used[base]!r} "
+                f"-> {slug}"
+            )
+
+        used[slug] = name
+        slugs[name] = slug
+
+    return slugs
+
+
+# ============================================================
 # WRITE JSON
 # ============================================================
 
@@ -717,22 +809,10 @@ def write_json(
     data
 ):
 
-    # --------------------------------------------------------
-    # CREATE OUTPUT DIRECTORY
-    # --------------------------------------------------------
-
     os.makedirs(
-        OUTPUT_DIR,
+        os.path.dirname(filename),
         exist_ok=True
     )
-
-    print(
-        f"Writing: {filename}"
-    )
-
-    # --------------------------------------------------------
-    # WRITE
-    # --------------------------------------------------------
 
     with open(
         filename,
@@ -744,12 +824,98 @@ def write_json(
             data,
             file,
             ensure_ascii=False,
-            indent=2
+            separators=(",", ":")
         )
 
-    print(
-        f"  {len(data):,} records"
+
+def clean_dir(path):
+
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+
+    os.makedirs(
+        path,
+        exist_ok=True
     )
+
+
+# ============================================================
+# SHARDS
+# ============================================================
+
+def write_shards(artworks_list):
+
+    artist_slugs = build_artist_slugs(
+        artworks_list
+    )
+
+    by_artist = {}
+    by_set = {}
+
+    for artwork in artworks_list:
+
+        slug = artist_slugs[
+            artwork["artist"]
+        ]
+
+        by_artist.setdefault(
+            slug,
+            []
+        ).append(artwork)
+
+        set_codes = sorted({
+            card["setCode"].lower()
+            for card in artwork["cards"]
+            if card.get("setCode")
+        })
+
+        for code in set_codes:
+
+            by_set.setdefault(
+                code,
+                []
+            ).append({
+                "id": artwork["id"],
+                "artist": artwork["artist"],
+                "artistSlug": slug,
+                "image": artwork["image"]
+            })
+
+    clean_dir(ARTIST_SHARD_DIR)
+    clean_dir(SET_SHARD_DIR)
+
+    for slug in sorted(by_artist):
+
+        write_json(
+            os.path.join(
+                ARTIST_SHARD_DIR,
+                f"{slug}.json"
+            ),
+            by_artist[slug]
+        )
+
+    for code in sorted(by_set):
+
+        write_json(
+            os.path.join(
+                SET_SHARD_DIR,
+                f"{code}.json"
+            ),
+            by_set[code]
+        )
+
+    # Only names whose slug differs from slugify(name) need to be
+    # known by the frontend.
+
+    overrides = {
+        name: slug
+        for name, slug in sorted(
+            artist_slugs.items()
+        )
+        if slug != slugify(name)
+    }
+
+    return by_artist, by_set, overrides
 
 
 # ============================================================
@@ -758,15 +924,7 @@ def write_json(
 
 def main():
 
-    # --------------------------------------------------------
-    # PROCESS
-    # --------------------------------------------------------
-
     artworks, sets = process_cards()
-
-    # --------------------------------------------------------
-    # SORT
-    # --------------------------------------------------------
 
     print()
     print("Sorting data...")
@@ -779,16 +937,11 @@ def main():
         sets
     )
 
-    # --------------------------------------------------------
-    # WRITE
-    # --------------------------------------------------------
-
     print()
     print("Writing output files...")
     print()
 
-    write_json(
-        ARTWORKS_FILE,
+    by_artist, by_set, overrides = write_shards(
         artworks_list
     )
 
@@ -797,9 +950,30 @@ def main():
         sets_list
     )
 
-    # ========================================================
-    # DONE
-    # ========================================================
+    write_json(
+        MANIFEST_FILE,
+        {
+            "version": SCRIPT_VERSION,
+            "generatedAt": datetime.now(
+                timezone.utc
+            ).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "counts": {
+                "artworks": len(artworks_list),
+                "artists": len(by_artist),
+                "sets": len(sets_list),
+                "setShards": len(by_set)
+            },
+            "artistSlugOverrides": overrides
+        }
+    )
+
+    if os.path.exists(LEGACY_ARTWORKS_FILE):
+
+        os.remove(LEGACY_ARTWORKS_FILE)
+
+        print(
+            "Removed legacy data/artworks.json"
+        )
 
     print()
     print("======================================")
@@ -813,19 +987,18 @@ def main():
     )
 
     print(
+        f"Artist shards:   "
+        f"{len(by_artist):,}"
+    )
+
+    print(
+        f"Set shards:      "
+        f"{len(by_set):,}"
+    )
+
+    print(
         f"Set records:     "
         f"{len(sets_list):,}"
-    )
-
-    print()
-
-    print("Generated:")
-    print(
-        ARTWORKS_FILE
-    )
-
-    print(
-        SETS_FILE
     )
 
     print()
