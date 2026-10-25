@@ -27,13 +27,13 @@ Use query parameters instead of server-side paths.
 
 Requirements:
 
-- [ ] Artist URL uses `?artist=`
-- [ ] Set URL uses `?set=`
-- [ ] Home URL has no parameters
-- [ ] Browser back/forward works
+- [x] Artist URL uses `?artist=`
+- [x] Set URL uses `?set=`
+- [x] Home URL has no parameters
+- [x] Browser back/forward works
 - [ ] Direct URLs work in MAMP
 - [ ] Direct URLs work on static hosting
-- [ ] Remove dependency on `.htaccess`
+- [x] Remove dependency on `.htaccess`
 
 ## ART-002 — Subtle fade in animation to grid
 - [ ] There's an animation when the grid images appear to user
