@@ -89,6 +89,63 @@ Keep navigation accessible without wasting screen space:
 
 ---
 
+## ART-004 — Artist info links
+
+Status: [ ] Todo
+
+### Goal
+Let users follow an artist to suitable external channels from the artist info modal.
+
+### Spec
+- [ ] Add an optional `links` object to artist data, e.g. `website`, `wikipedia`, `instagram`, `twitter`/`x`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`.
+- [ ] Artist info modal (`renderArtistInfo`) renders a "Links" list; only links present in data are shown, with readable labels.
+- [ ] Links open in a new tab with `rel="noopener noreferrer"`.
+- [ ] Only `https://` URLs are rendered; values are escaped.
+- [ ] Artists without links show no empty "Links" section.
+- [ ] Links are touch-friendly (min ~44px tap target) on mobile.
+- [ ] Data source is static JSON (no live API calls); document the field in `ARCHITECTURE.md`.
+- [ ] Data may be populated manually or by `tools/update_data.py`; missing data must not break the page.
+
+## ART-005 — Artwork modal scrolls with long content
+
+Status: [ ] Todo
+
+### Spec
+- [ ] Modal content is capped to the viewport height (use `dvh` with `vh` fallback) and scrolls vertically when content exceeds it.
+- [ ] Close control stays reachable while scrolling (sticky or outside the scroll area).
+- [ ] Page behind does not scroll while the modal is open (scroll lock, restored on close).
+- [ ] Scroll position resets to top when a different artwork is opened.
+- [ ] Use `overscroll-behavior: contain`.
+- [ ] Works on desktop and mobile widths.
+
+## ART-006 — Collapsible reprints in artwork modal
+
+Status: [ ] Todo
+
+### Spec
+- [ ] Reprints list is hidden by default in the artwork modal.
+- [ ] A "Show reprints (N)" button reveals the list; it toggles to "Hide reprints".
+- [ ] Button is a real `<button>` with `aria-expanded` and `aria-controls`.
+- [ ] State resets to collapsed whenever a new artwork opens.
+- [ ] If an artwork has no reprints, the button is not shown.
+- [ ] Existing reprint links (set navigation) keep working.
+- [ ] Depends on ART-005 for scrolling of the expanded list.
+
+## ART-007 — Mobile-optimized artwork modal
+
+Status: [ ] Todo
+
+### Spec
+- [ ] On narrow screens (<= 600px) the modal uses (near) full width/height with safe-area padding.
+- [ ] Artwork image fits the width without horizontal scroll; info is stacked below it.
+- [ ] Text sizes and buttons are readable and have touch targets of ~44px.
+- [ ] Close button is large and easy to reach.
+- [ ] Works in portrait and landscape.
+- [ ] Verify at 360px, 390px and 768px widths.
+- [ ] Depends on ART-005 and ART-006.
+
+---
+
 ## PER-001 — Remove unused CSS Styles
 
 Requirements:
