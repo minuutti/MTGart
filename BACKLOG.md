@@ -145,23 +145,23 @@ Status: [ ] Todo
 
 ## ART-008 — Artist links data file
 
-Status: [ ] Todo
+Status: [~] In progress
 
 ### Goal
 Provide the data that ART-004 renders. The generated artist data has no links, and `tools/update_data.py` rewrites `data/artists/` on every run, so links must live outside the generated output.
 
 ### Spec
-- [ ] Add a hand-maintained `data/artist-links.json`, keyed by artist slug, e.g. `{ "artist-slug": { "website": "https://...", "wikipedia": "https://..." } }`.
-- [ ] Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`. Values are `https://` URLs.
-- [ ] The file is not generated or overwritten by `tools/update_data.py`.
-- [ ] The app loads it once at startup (static fetch) and merges it into the artist info by slug. A missing or invalid file must not break the app.
+- [x] Add a hand-maintained `data/artist-links.json`, keyed by artist slug, e.g. `{ "artist-slug": { "website": "https://...", "wikipedia": "https://..." } }`.
+- [x] Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`. Values are `https://` URLs.
+- [x] The file is not generated or overwritten by `tools/update_data.py`.
+- [x] The app loads it once at startup (static fetch) and merges it into the artist info by slug. A missing or invalid file must not break the app.
 - [ ] Seed with a small set of well-known artists (verified URLs only) and add a way to validate the file (keys, `https://`, slugs exist in `artists.json`), e.g. `python tools/validate_links.py`.
-- [ ] Document the format and how to add links in `tools/README.md` and `ARCHITECTURE.md`.
+- [x] Document the format and how to add links in `tools/README.md` and `ARCHITECTURE.md`.
 - [ ] Blocks ART-004.
 
 ## ART-009 — About page
 
-Status: [ ] Todo
+Status: [~] In progress
 
 ### Goal
 Add a text-only "About" page explaining the purpose of the gallery.

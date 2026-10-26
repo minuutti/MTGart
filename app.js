@@ -19,15 +19,63 @@ const artistInfoContentEl = document.getElementById("artist-info-content");
 // LOAD DATA
 // ============================================================
 
+const ARTIST_LINK_KEYS = [
+    "website", "wikipedia", "instagram", "twitter", "bluesky",
+    "artstation", "facebook", "youtube", "patreon", "store"
+];
+
+// Attaches hand-maintained links (data/artist-links.json) to artists by slug.
+// A missing or invalid file is ignored so the gallery keeps working.
+async function mergeArtistLinks(linksRes) {
+
+    try {
+
+        if (!linksRes || !linksRes.ok) {
+            return;
+        }
+
+        const linksBySlug = await linksRes.json();
+
+        artists.forEach(artist => {
+
+            const entry = linksBySlug[artistShardSlug(artist)];
+
+            if (!entry || typeof entry !== "object") {
+                return;
+            }
+
+            const links = {};
+
+            ARTIST_LINK_KEYS.forEach(key => {
+                if (
+                    typeof entry[key] === "string"
+                    && entry[key].startsWith("https://")
+                ) {
+                    links[key] = entry[key];
+                }
+            });
+
+            if (Object.keys(links).length) {
+                artist.links = links;
+            }
+        });
+
+    } catch (error) {
+        console.warn("Could not load artist links", error);
+    }
+}
+
 async function loadData() {
 
     try {
 
-        const [artistsRes, setsRes, manifestRes] =
+        const [artistsRes, setsRes, manifestRes, linksRes] =
             await Promise.all([
                 fetch("./data/artists.json"),
                 fetch("./data/sets.json"),
                 fetch("./data/manifest.json")
+                    .catch(() => null),
+                fetch("./data/artist-links.json")
                     .catch(() => null)
             ]);
 
@@ -47,6 +95,8 @@ async function loadData() {
             artistSlugOverrides =
                 manifest.artistSlugOverrides || {};
         }
+
+        await mergeArtistLinks(linksRes);
 
         console.log(
             `Loaded ${artists.length} artists`
