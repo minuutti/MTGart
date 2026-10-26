@@ -1492,7 +1492,47 @@ artistInfoModalEl?.addEventListener(
 // INITIALIZE
 // ============================================================
 
+function setupHeaderScroll() {
+
+    const headerEl = document.querySelector("header");
+    if (!headerEl) return;
+
+    const HIDE_THRESHOLD = 12;
+    const SHOW_THRESHOLD = 8;
+    let lastScrollY = window.scrollY;
+    let isHeaderHidden = false;
+    let ticking = false;
+
+    function update() {
+        ticking = false;
+        const y = Math.max(window.scrollY, 0);
+        const delta = y - lastScrollY;
+
+        if (y <= 0) {
+            isHeaderHidden = false;
+        } else if (delta > HIDE_THRESHOLD) {
+            isHeaderHidden = true;
+        } else if (delta < -SHOW_THRESHOLD) {
+            isHeaderHidden = false;
+        } else {
+            return; // small delta: keep anchor so slow scrolls accumulate
+        }
+
+        lastScrollY = y;
+        headerEl.classList.toggle("site-header--hidden", isHeaderHidden);
+    }
+
+    window.addEventListener("scroll", () => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(update);
+        }
+    }, { passive: true });
+}
+
 function init() {
+
+    setupHeaderScroll();
 
     setupModal();
     setupArtistSearch();
