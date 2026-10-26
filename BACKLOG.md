@@ -97,14 +97,13 @@ Status: [ ] Todo
 Let users follow an artist to suitable external channels from the artist info modal.
 
 ### Spec
-- [ ] Add an optional `links` object to artist data, e.g. `website`, `wikipedia`, `instagram`, `twitter`/`x`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`.
+- [ ] Each artist may have an optional `links` object (from ART-008), e.g. `website`, `wikipedia`, `instagram`, `twitter`/`x`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`.
 - [ ] Artist info modal (`renderArtistInfo`) renders a "Links" list; only links present in data are shown, with readable labels.
 - [ ] Links open in a new tab with `rel="noopener noreferrer"`.
 - [ ] Only `https://` URLs are rendered; values are escaped.
 - [ ] Artists without links show no empty "Links" section.
 - [ ] Links are touch-friendly (min ~44px tap target) on mobile.
-- [ ] Data source is static JSON (no live API calls); document the field in `ARCHITECTURE.md`.
-- [ ] Data may be populated manually or by `tools/update_data.py`; missing data must not break the page.
+- [ ] Data comes from `data/artist-links.json` (see ART-008); no live API calls; missing data must not break the page.
 
 ## ART-005 — Artwork modal scrolls with long content
 
@@ -143,6 +142,22 @@ Status: [ ] Todo
 - [ ] Works in portrait and landscape.
 - [ ] Verify at 360px, 390px and 768px widths.
 - [ ] Depends on ART-005 and ART-006.
+
+## ART-008 — Artist links data file
+
+Status: [ ] Todo
+
+### Goal
+Provide the data that ART-004 renders. The generated artist data has no links, and `tools/update_data.py` rewrites `data/artists/` on every run, so links must live outside the generated output.
+
+### Spec
+- [ ] Add a hand-maintained `data/artist-links.json`, keyed by artist slug, e.g. `{ "artist-slug": { "website": "https://...", "wikipedia": "https://..." } }`.
+- [ ] Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`. Values are `https://` URLs.
+- [ ] The file is not generated or overwritten by `tools/update_data.py`.
+- [ ] The app loads it once at startup (static fetch) and merges it into the artist info by slug. A missing or invalid file must not break the app.
+- [ ] Seed with a small set of well-known artists (verified URLs only) and add a way to validate the file (keys, `https://`, slugs exist in `artists.json`), e.g. `python tools/validate_links.py`.
+- [ ] Document the format and how to add links in `tools/README.md` and `ARCHITECTURE.md`.
+- [ ] Blocks ART-004.
 
 ---
 
