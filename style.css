@@ -267,6 +267,17 @@ header {
   padding: 10px 20px;
   box-sizing: border-box;
   border-bottom: 1px solid #333;
+  transition: transform 180ms ease;
+}
+
+header.site-header--hidden {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header {
+    transition: none;
+  }
 }
 
 main {

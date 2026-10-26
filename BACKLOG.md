@@ -36,7 +36,7 @@ Status: [ ] Todo
 
 ## ART-003 — Fixed navigation header
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Goal
 Keep navigation accessible without wasting screen space:
@@ -47,14 +47,14 @@ Keep navigation accessible without wasting screen space:
 
 ### Acceptance criteria
 
-- [ ] Header uses fixed positioning at top of viewport on all pages/views.
-- [ ] Main content starts below header (no overlap with first row/content).
-- [ ] On downward scroll past a small threshold, header slides out of view.
-- [ ] On upward scroll past a small threshold, header slides back into view.
-- [ ] At page top (`scrollY <= 0`), header is always visible.
-- [ ] No flicker/jitter during slow scroll or tiny scroll deltas.
-- [ ] Behavior works on desktop and mobile widths.
-- [ ] Transitions are smooth and subtle (no abrupt jump).
+- [x] Header uses fixed positioning at top of viewport on all pages/views.
+- [x] Main content starts below header (no overlap with first row/content).
+- [x] On downward scroll past a small threshold, header slides out of view.
+- [x] On upward scroll past a small threshold, header slides back into view.
+- [x] At page top (`scrollY <= 0`), header is always visible.
+- [x] No flicker/jitter during slow scroll or tiny scroll deltas.
+- [x] Behavior works on desktop and mobile widths.
+- [x] Transitions are smooth and subtle (no abrupt jump).
 
 ### Suggested implementation notes (non-binding)
 
@@ -74,18 +74,18 @@ Keep navigation accessible without wasting screen space:
 
 ### Manual test checklist
 
-- [ ] Load home view: header visible, content not under header.
-- [ ] Scroll down slowly: header hides once threshold exceeded.
-- [ ] Scroll up slightly: header reappears once threshold exceeded.
-- [ ] Jump to top: header visible.
-- [ ] Navigate between `?artist=` and `?set=` views: behavior preserved.
-- [ ] Mobile viewport test (DevTools): same behavior, no overlap.
+- [x] Load home view: header visible, content not under header.
+- [x] Scroll down slowly: header hides once threshold exceeded.
+- [x] Scroll up slightly: header reappears once threshold exceeded.
+- [x] Jump to top: header visible.
+- [x] Navigate between `?artist=` and `?set=` views: behavior preserved.
+- [x] Mobile viewport test (DevTools): same behavior, no overlap.
 
 ### Definition of done
 
-- [ ] All acceptance criteria checked.
-- [ ] No regressions in routing/navigation.
-- [ ] Mark task status to `[x] Done`.
+- [x] All acceptance criteria checked.
+- [x] No regressions in routing/navigation.
+- [x] Mark task status to `[x] Done`.
 
 ---
 
