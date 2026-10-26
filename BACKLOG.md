@@ -161,7 +161,7 @@ Provide the data that ART-004 renders. The generated artist data has no links, a
 
 ## ART-009 — About page
 
-Status: [~] In progress
+Status: [ ] Todo
 
 ### Goal
 Add a text-only "About" page explaining the purpose of the gallery.
