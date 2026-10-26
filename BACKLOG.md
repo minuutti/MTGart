@@ -159,6 +159,46 @@ Provide the data that ART-004 renders. The generated artist data has no links, a
 - [ ] Document the format and how to add links in `tools/README.md` and `ARCHITECTURE.md`.
 - [ ] Blocks ART-004.
 
+## ART-009 — About page
+
+Status: [ ] Todo
+
+### Goal
+Add a text-only "About" page explaining the purpose of the gallery.
+
+### Spec
+- [ ] Add an "About" link to the header navigation.
+- [ ] Route uses query parameters: `/?page=about` (no server-side routing, no `.htaccess`); navigation via `history.pushState()` and `popstate`, so back/forward works.
+- [ ] Direct load of `/?page=about` shows the page; home, `?artist=` and `?set=` keep working.
+- [ ] Page is static text in the existing layout (no new framework, no API requests), content below the fixed header (ART-003).
+- [ ] Readable on mobile and desktop (comfortable line length, responsive font sizes).
+- [ ] Semantic structure: one `<h1>`, `<h2>` for sections.
+- [ ] Set the document title to "About — MTG Artist Gallery" and restore it on leaving.
+
+### Content
+
+# About MTG Artist Gallery
+
+The artists have always been one of my favorite parts of Magic: The Gathering. This project started from a simple desire to see their work together — not as isolated cards, but as bodies of work that span sets, years, and changing visual directions.
+
+## Look beyond the card
+
+### The people behind the images
+
+Thousands of artists have helped shape the visual identity of Magic. Their work tells stories of the game's history that can easily disappear behind the cards themselves.
+
+This gallery is a place to bring those artists forward, explore their contributions, and simply spend some time looking at the art.
+
+MTG Artist Gallery puts the artists behind Magic in the foreground.
+
+Explore an artist's work across different sets and discover how their style contributes to very different worlds, themes, and eras. Instead of focusing on the cards themselves, the gallery invites you to look at the artwork as a body of work.
+
+## Explore Magic through its art
+
+Move between sets and discover how their aesthetics change over time. See the different artistic directions Magic has taken, from its early years to the present, and how new worlds have brought new visual languages with them.
+
+The artwork offers another way to experience the evolution of the game — through styles, ideas, colors, characters, creatures, and worlds rather than mechanics and card lists.
+
 ---
 
 ## PER-001 — Remove unused CSS Styles
