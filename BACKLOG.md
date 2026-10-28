@@ -1,5 +1,9 @@
 # MTG Artist Gallery — Backlog
 
+## Backlog workflow
+
+This file is maintained directly on `main`. Backlog-only changes—including adding or editing tasks and updating their status—may be committed and pushed to `main` without a separate branch or pull request.
+
 ## Status legend
 
 - [ ] Todo
