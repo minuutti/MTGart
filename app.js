@@ -1144,6 +1144,105 @@ function closeArtistSearch() {
             "hidden"
         );
     }
+
+    resetSearchNavigation("artist-search", "artist-list");
+    document.getElementById("search-artist")?.focus();
+}
+
+function resetSearchNavigation(inputId, listId) {
+
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+
+    if (input) {
+        input.setAttribute("aria-expanded", "false");
+        input.removeAttribute("aria-activedescendant");
+        input.dataset.activeOptionIndex = "-1";
+    }
+
+    if (list) {
+        list.querySelectorAll('[role="option"]').forEach(option => {
+            option.setAttribute("aria-selected", "false");
+            option.classList.remove("search-option--active");
+        });
+    }
+}
+
+function refreshSearchNavigation(inputId, listId) {
+
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+
+    if (!input || !list) {
+        return;
+    }
+
+    const options = list.querySelectorAll('[role="option"]');
+    input.setAttribute("aria-expanded", String(options.length > 0));
+    input.removeAttribute("aria-activedescendant");
+    input.dataset.activeOptionIndex = "-1";
+
+    options.forEach(option => {
+        option.setAttribute("aria-selected", "false");
+        option.classList.remove("search-option--active");
+    });
+}
+
+function activateSearchOption(input, list, index) {
+
+    const options = list.querySelectorAll('[role="option"]');
+    if (!options.length) {
+        return;
+    }
+
+    const boundedIndex = Math.max(0, Math.min(index, options.length - 1));
+    const activeOption = options[boundedIndex];
+
+    options.forEach((option, optionIndex) => {
+        const isActive = optionIndex === boundedIndex;
+        option.setAttribute("aria-selected", String(isActive));
+        option.classList.toggle("search-option--active", isActive);
+    });
+
+    input.dataset.activeOptionIndex = String(boundedIndex);
+    input.setAttribute("aria-activedescendant", activeOption.id);
+    activeOption.scrollIntoView({ block: "nearest" });
+}
+
+function setupSearchKeyboard(input, list, closeSearch) {
+
+    if (!list) {
+        return;
+    }
+
+    input.dataset.activeOptionIndex = "-1";
+
+    input.addEventListener("keydown", event => {
+
+        const options = list.querySelectorAll('[role="option"]');
+        const activeIndex = Number(input.dataset.activeOptionIndex || -1);
+
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            event.preventDefault();
+
+            if (!options.length) {
+                return;
+            }
+
+            const direction = event.key === "ArrowDown" ? 1 : -1;
+            const nextIndex = activeIndex < 0
+                ? (direction > 0 ? 0 : options.length - 1)
+                : activeIndex + direction;
+
+            activateSearchOption(input, list, nextIndex);
+        } else if (event.key === "Enter" && activeIndex >= 0) {
+            event.preventDefault();
+            options[activeIndex]?.click();
+        } else if (event.key === "Escape") {
+            event.preventDefault();
+            closeSearch();
+        }
+    });
 }
 
 
@@ -1181,6 +1280,10 @@ function renderArtistList(
                 item.className =
                     "artist-search-item";
 
+                item.id = `artist-search-option-${el.children.length}`;
+                item.setAttribute("role", "option");
+                item.setAttribute("aria-selected", "false");
+
                 item.textContent =
                     artist.name;
 
@@ -1202,6 +1305,8 @@ function renderArtistList(
                 );
             }
         );
+
+    refreshSearchNavigation("artist-search", "artist-list");
 }
 
 
@@ -1219,6 +1324,9 @@ function setupArtistSearch() {
     if (!input) {
         return;
     }
+
+    const list = document.getElementById("artist-list");
+    setupSearchKeyboard(input, list, closeArtistSearch);
 
     input.addEventListener(
         "input",
@@ -1312,6 +1420,9 @@ function closeSetSearch() {
             "hidden"
         );
     }
+
+    resetSearchNavigation("set-search", "set-list");
+    document.getElementById("search-set")?.focus();
 }
 
 
@@ -1346,6 +1457,10 @@ function renderSetList(list) {
             item.className =
                 "set-search-item";
 
+            item.id = `set-search-option-${el.children.length}`;
+            item.setAttribute("role", "option");
+            item.setAttribute("aria-selected", "false");
+
             item.textContent =
                 set.name;
 
@@ -1366,6 +1481,8 @@ function renderSetList(list) {
                 item
             );
         });
+
+    refreshSearchNavigation("set-search", "set-list");
 }
 
 
@@ -1379,6 +1496,9 @@ function setupSetSearch() {
     if (!input) {
         return;
     }
+
+    const list = document.getElementById("set-list");
+    setupSearchKeyboard(input, list, closeSetSearch);
 
     input.addEventListener(
         "input",

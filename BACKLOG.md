@@ -213,20 +213,20 @@ Requirements:
 
 ## ART-010 — Keyboard navigation for search results
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Goal
 Allow users to navigate and choose artist and set search suggestions without a mouse.
 
 ### Spec
-- [ ] In both artist and set search, ArrowDown and ArrowUp move the active highlight through available results.
-- [ ] Enter selects the highlighted result; when none is highlighted, existing form behavior is preserved.
-- [ ] Escape closes the search UI or clears suggestions without navigating.
-- [ ] The active result is visibly highlighted and remains in view while navigating.
-- [ ] Search inputs and suggestions use accessible combobox/listbox semantics, including `aria-expanded`, `aria-controls`, `role="listbox"`, `role="option"`, and `aria-activedescendant` as appropriate.
-- [ ] Mouse/touch selection and existing filtering/navigation behavior remain unchanged.
-- [ ] Keyboard behavior works for both artist and set search on desktop and mobile keyboards.
-- [ ] Focus remains predictable when suggestions open, close, and a result is selected.
+- [x] In both artist and set search, ArrowDown and ArrowUp move the active highlight through available results.
+- [x] Enter selects the highlighted result; when none is highlighted, existing form behavior is preserved.
+- [x] Escape closes the search UI or clears suggestions without navigating.
+- [x] The active result is visibly highlighted and remains in view while navigating.
+- [x] Search inputs and suggestions use accessible combobox/listbox semantics, including `aria-expanded`, `aria-controls`, `role="listbox"`, `role="option"`, and `aria-activedescendant` as appropriate.
+- [x] Mouse/touch selection and existing filtering/navigation behavior remain unchanged.
+- [x] Keyboard behavior works for both artist and set search on desktop and mobile keyboards.
+- [x] Focus remains predictable when suggestions open, close, and a result is selected.
 
 ---
 

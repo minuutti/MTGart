@@ -211,12 +211,20 @@
                 type="search"
                 placeholder="Search artist..."
                 autocomplete="off"
+                aria-label="Search artists"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="artist-list"
             >
 
 
             <div
                 id="artist-list"
                 class="artist-list"
+                role="listbox"
+                aria-label="Artist search results"
             >
             </div>
 
@@ -244,9 +252,19 @@
             id="set-search"
             placeholder="Search sets..."
             autocomplete="off"
+            aria-label="Search sets"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="set-list"
         >
 
-        <div id="set-list"></div>
+        <div
+            id="set-list"
+            role="listbox"
+            aria-label="Set search results"
+        ></div>
 
     </div>
 
