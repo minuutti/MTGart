@@ -8,6 +8,8 @@ const setCache = new Map();
 let currentArtist = null;
 let currentSet = null;
 let currentCards = [];
+let artworkModalScrollY = 0;
+let artworkModalBodyStyles = null;
 
 const artistInfoSectionEl = document.getElementById("artist-info-section");
 const artistInfoBtnEl = document.getElementById("artist-info-btn");
@@ -801,6 +803,11 @@ async function openModal(
         return;
     }
 
+    const modalContent = modal.querySelector(".artwork-modal-content");
+    if (modalContent) {
+        modalContent.scrollTop = 0;
+    }
+
     // Set shard entries are slim; resolve the full artwork
     // (with cards/reprints) from the artist shard.
     if (!artwork.cards) {
@@ -866,9 +873,9 @@ async function openModal(
 
     info.innerHTML = `
 
-        <h3>
+        <h3 id="modal-title">
             ${escapeHtml(
-                sample?.name || ""
+                sample?.name || artwork.artist || "Artwork"
             )}
         </h3>
 
@@ -918,64 +925,88 @@ async function openModal(
         }
 
 
-        <h4>
-            Reprints
-        </h4>
+        ${
+            cards.length
+                ? `
+                    <button
+                        type="button"
+                        class="reprints-toggle"
+                        aria-expanded="false"
+                        aria-controls="artwork-reprints"
+                    >
+                        Show reprints (${cards.length})
+                    </button>
 
+                    <div
+                        id="artwork-reprints"
+                        class="reprints"
+                        hidden
+                    >
 
-        <div class="reprints">
+                        <h4>Reprints</h4>
 
-            ${cards.map(
-                card => {
-                    const setObj = sets.find(
-                        s => s.code === card.setCode
-                    );
-                    const setName = setObj 
-                        ? setObj.name 
-                        : card.setName;
-                    
-                    return `
-                        <div class="reprint">
+                        ${cards.map(
+                            card => {
+                                const setObj = sets.find(
+                                    s => s.code === card.setCode
+                                );
+                                const setName = setObj
+                                    ? setObj.name
+                                    : card.setName;
 
-                            <strong>
-                                ${escapeHtml(
-                                    card.name
-                                )}
-                            </strong>
+                                return `
+                                    <div class="reprint">
+                                        <strong>${escapeHtml(card.name)}</strong>
+                                        <span>
+                                            <a
+                                                href="#"
+                                                class="reprint-link"
+                                                data-set-code="${escapeHtml(card.setCode)}"
+                                                data-artwork-id="${escapeHtml(artwork.id)}"
+                                                onclick="event.preventDefault(); closeModal(); loadSetWithArtwork('${card.setCode}', '${artwork.id}');"
+                                            >
+                                                ${escapeHtml(setName)}
+                                            </a>
+                                            ${card.year ? ` (${card.year})` : ""}
+                                            — ${escapeHtml(card.rarity)}
+                                        </span>
+                                    </div>
+                                `;
+                            }
+                        ).join("")}
 
-                            <span>
-                                <a 
-                                    href="#" 
-                                    class="reprint-link"
-                                    data-set-code="${escapeHtml(card.setCode)}"
-                                    data-artwork-id="${escapeHtml(artwork.id)}"
-                                    onclick="event.preventDefault(); closeModal(); loadSetWithArtwork('${card.setCode}', '${artwork.id}');"
-                                >
-                                    ${escapeHtml(
-                                        setName
-                                    )}
-                                </a>
-                                ${
-                                    card.year
-                                    ? ` (${card.year})`
-                                    : ""
-                                }
-                                —
-                                ${escapeHtml(
-                                    card.rarity
-                                )}
-                            </span>
-
-                        </div>
-                    `;
-                }
-            ).join("")}
-
-        </div>
+                    </div>
+                `
+                : ""
+        }
 
     `;
 
+    const reprintsToggle = info.querySelector(".reprints-toggle");
+    if (reprintsToggle) {
+        reprintsToggle.addEventListener("click", () => {
+            const expanded = reprintsToggle.getAttribute("aria-expanded") === "true";
+            reprintsToggle.setAttribute("aria-expanded", String(!expanded));
+            reprintsToggle.textContent = expanded
+                ? `Show reprints (${cards.length})`
+                : "Hide reprints";
+            info.querySelector("#artwork-reprints").hidden = expanded;
+        });
+    }
 
+    if (!artworkModalBodyStyles) {
+        artworkModalScrollY = window.scrollY;
+        artworkModalBodyStyles = {
+            position: document.body.style.position,
+            top: document.body.style.top,
+            width: document.body.style.width,
+            overflow: document.body.style.overflow
+        };
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${artworkModalScrollY}px`;
+        document.body.style.width = "100%";
+        document.body.style.overflow = "hidden";
+    }
     modal.classList.remove(
         "hidden"
     );
@@ -1061,6 +1092,15 @@ function closeModal() {
         modal.classList.add(
             "hidden"
         );
+    }
+
+    if (artworkModalBodyStyles) {
+        document.body.style.position = artworkModalBodyStyles.position;
+        document.body.style.top = artworkModalBodyStyles.top;
+        document.body.style.width = artworkModalBodyStyles.width;
+        document.body.style.overflow = artworkModalBodyStyles.overflow;
+        window.scrollTo(0, artworkModalScrollY);
+        artworkModalBodyStyles = null;
     }
 }
 
