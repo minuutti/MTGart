@@ -963,7 +963,7 @@ async function openModal(
                                                 class="reprint-link"
                                                 data-set-code="${escapeHtml(card.setCode)}"
                                                 data-artwork-id="${escapeHtml(artwork.id)}"
-                                                onclick="event.preventDefault(); closeModal(); loadSetWithArtwork('${card.setCode}', '${artwork.id}');"
+                                                onclick="event.preventDefault(); closeModal(); loadSet('${card.setCode}');"
                                             >
                                                 ${escapeHtml(setName)}
                                             </a>
@@ -1010,69 +1010,6 @@ async function openModal(
     modal.classList.remove(
         "hidden"
     );
-}
-
-
-// ============================================================
-// LOAD SET WITH ARTWORK FILTER
-// ============================================================
-
-async function loadSetWithArtwork(setCode, artworkId) {
-    
-    const set = findSet(setCode);
-    
-    if (!set) {
-        console.warn("Set not found:", setCode);
-        return;
-    }
-    
-    currentSet = set;
-    currentArtist = null;
-    
-    history.pushState(
-        {},
-        "",
-        setUrl(set.code)
-    );
-    
-    showGridLoading();
-
-    let filteredArtworks;
-
-    try {
-
-        const entries = await getSetEntries(set.code);
-
-        // Only show the specific artwork in this set
-        filteredArtworks = entries.filter(
-            entry => entry.id === artworkId
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        if (currentSet === set) {
-            clearArtistInfo();
-            showGridError("Failed to load artworks.");
-        }
-
-        return;
-    }
-
-    if (currentSet !== set) {
-        return;
-    }
-
-    currentCards = filteredArtworks;
-
-    const title = document.getElementById("title");
-    if (title) {
-        title.textContent = set.name;
-    }
-    
-    clearArtistInfo();
-    renderGrid(filteredArtworks);
 }
 
 
