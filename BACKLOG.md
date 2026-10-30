@@ -235,3 +235,7 @@ Allow users to navigate and choose artist and set search suggestions without a m
 ## BUG-001 - The image grid is below the navigation
 
 - [x] The image grid should have padding or margin so it's not below the header/navigation
+
+## BUG-002 - Reprint set links show only one artwork
+
+- [x] Set links in the artwork modal open the full set grid (all artworks in the set), not just the modal's artwork
