@@ -111,41 +111,41 @@ Let users follow an artist to suitable external channels from the artist info mo
 
 ## ART-005 — Artwork modal scrolls with long content
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Spec
-- [ ] Modal content is capped to the viewport height (use `dvh` with `vh` fallback) and scrolls vertically when content exceeds it.
-- [ ] Close control stays reachable while scrolling (sticky or outside the scroll area).
-- [ ] Page behind does not scroll while the modal is open (scroll lock, restored on close).
-- [ ] Scroll position resets to top when a different artwork is opened.
-- [ ] Use `overscroll-behavior: contain`.
-- [ ] Works on desktop and mobile widths.
+- [x] Modal content is capped to the viewport height (use `dvh` with `vh` fallback) and scrolls vertically when content exceeds it.
+- [x] Close control stays reachable while scrolling (sticky or outside the scroll area).
+- [x] Page behind does not scroll while the modal is open (scroll lock, restored on close).
+- [x] Scroll position resets to top when a different artwork is opened.
+- [x] Use `overscroll-behavior: contain`.
+- [x] Works on desktop and mobile widths.
 
 ## ART-006 — Collapsible reprints in artwork modal
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Spec
-- [ ] Reprints list is hidden by default in the artwork modal.
-- [ ] A "Show reprints (N)" button reveals the list; it toggles to "Hide reprints".
-- [ ] Button is a real `<button>` with `aria-expanded` and `aria-controls`.
-- [ ] State resets to collapsed whenever a new artwork opens.
-- [ ] If an artwork has no reprints, the button is not shown.
-- [ ] Existing reprint links (set navigation) keep working.
-- [ ] Depends on ART-005 for scrolling of the expanded list.
+- [x] Reprints list is hidden by default in the artwork modal.
+- [x] A "Show reprints (N)" button reveals the list; it toggles to "Hide reprints".
+- [x] Button is a real `<button>` with `aria-expanded` and `aria-controls`.
+- [x] State resets to collapsed whenever a new artwork opens.
+- [x] If an artwork has no reprints, the button is not shown.
+- [x] Existing reprint links (set navigation) keep working.
+- [x] Depends on ART-005 for scrolling of the expanded list.
 
 ## ART-007 — Mobile-optimized artwork modal
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Spec
-- [ ] On narrow screens (<= 600px) the modal uses (near) full width/height with safe-area padding.
-- [ ] Artwork image fits the width without horizontal scroll; info is stacked below it.
-- [ ] Text sizes and buttons are readable and have touch targets of ~44px.
-- [ ] Close button is large and easy to reach.
-- [ ] Works in portrait and landscape.
-- [ ] Verify at 360px, 390px and 768px widths.
-- [ ] Depends on ART-005 and ART-006.
+- [x] On narrow screens (<= 600px) the modal uses (near) full width/height with safe-area padding.
+- [x] Artwork image fits the width without horizontal scroll; info is stacked below it.
+- [x] Text sizes and buttons are readable and have touch targets of ~44px.
+- [x] Close button is large and easy to reach.
+- [x] Works in portrait and landscape.
+- [x] Verify at 360px, 390px and 768px widths.
+- [x] Depends on ART-005 and ART-006.
 
 ## ART-008 — Artist links data file
 

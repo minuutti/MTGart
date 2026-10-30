@@ -121,16 +121,20 @@
 
     <div
         id="modal"
-        class="modal hidden"
+        class="modal artwork-modal hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
     >
 
-        <div class="modal-content">
+        <div class="modal-content artwork-modal-content">
 
             <button
                 type="button"
                 class="modal-close"
                 onclick="closeModal()"
                 aria-label="Close"
+                title="Close artwork details"
             >
                 ×
             </button>
