@@ -15,6 +15,8 @@ const artistInfoSectionEl = document.getElementById("artist-info-section");
 const artistInfoBtnEl = document.getElementById("artist-info-btn");
 const artistInfoModalEl = document.getElementById("artist-info-modal");
 const artistInfoContentEl = document.getElementById("artist-info-content");
+const aboutLinkEl = document.getElementById("about-link");
+const defaultDocumentTitle = document.title;
 
 
 // ============================================================
@@ -136,6 +138,13 @@ const BASE_PATH = "/MTGart";
 function getRoute() {
     const params = new URLSearchParams(window.location.search);
 
+    if (params.get("page") === "about") {
+        return {
+            type: "about",
+            value: ""
+        };
+    }
+
     if (params.has("artist")) {
         return {
             type: "artist",
@@ -159,6 +168,11 @@ function getRoute() {
 function loadInitialView() {
     const route = getRoute();
 
+    if (route.type === "about") {
+        showAboutPage();
+        return;
+    }
+
     if (route.type === "artist") {
         const artist = findArtist(route.value);
 
@@ -178,6 +192,26 @@ function loadInitialView() {
     }
 
     loadRandomArtist(false);
+}
+
+function showAboutPage() {
+    document.getElementById("gallery")?.classList.add("hidden");
+    document.querySelector(".page-heading")?.classList.add("hidden");
+    document.getElementById("about-page")?.classList.remove("hidden");
+    document.title = "About — MTG Artist Gallery";
+
+    currentArtist = null;
+    currentSet = null;
+    currentCards = [];
+    clearArtistInfo();
+    hideGridLoading();
+}
+
+function hideAboutPage() {
+    document.getElementById("gallery")?.classList.remove("hidden");
+    document.querySelector(".page-heading")?.classList.remove("hidden");
+    document.getElementById("about-page")?.classList.add("hidden");
+    document.title = defaultDocumentTitle;
 }
 
 
@@ -285,6 +319,10 @@ function setUrl(setCode) {
     return `${BASE_PATH}/?set=${encodeURIComponent(setCode)}`;
 }
 
+function aboutUrl() {
+    return `${window.location.pathname}?page=about`;
+}
+
 function navigate(url) {
     history.pushState({}, "", url);
     loadInitialView();
@@ -386,6 +424,7 @@ async function loadArtist(
         return;
     }
 
+    hideAboutPage();
     currentArtist = artist;
     currentSet = null;
 
@@ -641,6 +680,7 @@ async function loadSet(
         return;
     }
 
+    hideAboutPage();
     currentSet = set;
     currentArtist = null;
 
@@ -1684,6 +1724,17 @@ function init() {
     setupModal();
     setupArtistSearch();
     setupSetSearch();
+
+    if (aboutLinkEl) {
+        aboutLinkEl.addEventListener("click", event => {
+            event.preventDefault();
+            navigate(aboutUrl());
+        });
+    }
+
+    if (getRoute().type === "about") {
+        showAboutPage();
+    }
 
     loadData();
 }
