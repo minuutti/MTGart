@@ -748,7 +748,7 @@ header button:hover {
   }
 
   main {
-    padding-top: 150px;
+    padding-top: 170px;
   }
 
 }
@@ -773,17 +773,22 @@ header button:hover {
 .page-heading {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
+  height: 47px; /* same as header buttons, so the header height never changes */
 }
 
 .page-heading h1 {
-  margin-bottom: 0;
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.1;
 }
 
 .artist-info-link {
-  margin-top: 2px;
+  margin-top: 1px;
   color: #4a9eff;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.2;
   text-decoration: none;
 }
 
