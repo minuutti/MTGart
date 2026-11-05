@@ -159,25 +159,26 @@ Provide the data that ART-004 renders. The generated artist data has no links, a
 - [x] Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`. Values are `https://` URLs.
 - [x] The file is not generated or overwritten by `tools/update_data.py`.
 - [x] The app loads it once at startup (static fetch) and merges it into the artist info by slug. A missing or invalid file must not break the app.
-- [ ] Seed with a small set of well-known artists (verified URLs only) and add a way to validate the file (keys, `https://`, slugs exist in `artists.json`), e.g. `python tools/validate_links.py`.
+- [ ] Seed with a small set of well-known artists (verified URLs only).
+- [x] Add a way to validate keys, HTTPS URLs, and artist slugs, e.g. `python3 tools/validate_links.py`.
 - [x] Document the format and how to add links in `tools/README.md` and `ARCHITECTURE.md`.
 - [ ] Blocks ART-004.
 
 ## ART-009 — About page
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Goal
 Add a text-only "About" page explaining the purpose of the gallery.
 
 ### Spec
-- [ ] Add an "About" link to the header navigation.
-- [ ] Route uses query parameters: `/?page=about` (no server-side routing, no `.htaccess`); navigation via `history.pushState()` and `popstate`, so back/forward works.
-- [ ] Direct load of `/?page=about` shows the page; home, `?artist=` and `?set=` keep working.
-- [ ] Page is static text in the existing layout (no new framework, no API requests), content below the fixed header (ART-003).
-- [ ] Readable on mobile and desktop (comfortable line length, responsive font sizes).
-- [ ] Semantic structure: one `<h1>`, `<h2>` for sections.
-- [ ] Set the document title to "About — MTG Artist Gallery" and restore it on leaving.
+- [x] Add an "About" link to the header navigation.
+- [x] Route uses query parameters: `/?page=about` (no server-side routing, no `.htaccess`); navigation via `history.pushState()` and `popstate`, so back/forward works.
+- [x] Direct load of `/?page=about` shows the page; home, `?artist=` and `?set=` keep working.
+- [x] Page is static text in the existing layout (no new framework, no API requests), content below the fixed header (ART-003).
+- [x] Readable on mobile and desktop (comfortable line length, responsive font sizes).
+- [x] Semantic structure: one `<h1>`, `<h2>` for sections.
+- [x] Set the document title to "About — MTG Artist Gallery" and restore it on leaving.
 
 ### Content
 
