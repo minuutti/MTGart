@@ -11,7 +11,7 @@ let currentCards = [];
 let artworkModalScrollY = 0;
 let artworkModalBodyStyles = null;
 
-const artistInfoSectionEl = document.getElementById("artist-info-section");
+const artistInfoSectionEl = document.getElementById("artist-info-btn");
 const artistInfoBtnEl = document.getElementById("artist-info-btn");
 const artistInfoModalEl = document.getElementById("artist-info-modal");
 const artistInfoContentEl = document.getElementById("artist-info-content");
@@ -487,7 +487,7 @@ function renderArtistInfo(artist) {
         return;
     }
 
-    // Show the artist info section (button)
+    // Show the artist info link
     artistInfoSectionEl.classList.remove("hidden");
 
     if (!artistInfoContentEl) {
@@ -1660,7 +1660,10 @@ document.getElementById("random-set")?.addEventListener(
 
 artistInfoBtnEl?.addEventListener(
     "click",
-    openArtistInfoModal
+    event => {
+        event.preventDefault();
+        openArtistInfoModal();
+    }
 );
 
 artistInfoModalEl?.addEventListener(
