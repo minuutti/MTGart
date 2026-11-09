@@ -242,7 +242,8 @@ Give visitors a welcoming, artwork-focused landing page instead of opening a ran
 - [ ] Present a visual hero collage of staggered artwork images with a large "Art of Magic" title overlaid; place the introduction and actions below it, adapting the layout responsively.
 - [ ] Show this introduction: "Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined."
 - [ ] Show the compact disclaimer: "Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast."
-- [ ] Maintain a predefined selection of 30 well-known artworks and randomly choose artworks from it each time the home view loads. Display one item per unique artwork.
+- [ ] Maintain a hand-edited JSON file listing 30 preselected, well-known artworks by `illustration_id`; it must not be overwritten by data generation.
+- [ ] Load the selection from that JSON file and randomly choose artworks from it each time the home view loads. Display one item per unique artwork.
 - [ ] Reuse existing static artwork data and image URLs; do not add live API requests or download images locally.
 - [ ] Provide home-page actions for Random Artist, Random Set, and About, consistent with the supplied reference and existing navigation behavior.
 - [ ] Keep the existing About page available as a separate view.
