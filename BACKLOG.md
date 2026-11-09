@@ -229,6 +229,25 @@ Allow users to navigate and choose artist and set search suggestions without a m
 - [x] Keyboard behavior works for both artist and set search on desktop and mobile keyboards.
 - [x] Focus remains predictable when suggestions open, close, and a result is selected.
 
+## ART-011 — Dedicated Art from Magic home page
+
+Status: [ ] Todo
+
+### Goal
+Give visitors a welcoming, artwork-focused landing page instead of opening a random artist view.
+
+### Spec
+- [ ] Loading `/` with no query parameters shows the dedicated home page; it does not select or navigate to a random artist.
+- [ ] The header's "Art from Magic" navigation returns to the home page from artist, set, and About views. Use the existing query-parameter routing and browser history behavior.
+- [ ] Present a visual hero collage of staggered artwork images with a large "Art of Magic" title overlaid; place the introduction and actions below it, adapting the layout responsively.
+- [ ] Show this introduction: "Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined."
+- [ ] Show the compact disclaimer: "Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast."
+- [ ] Maintain a predefined selection of 30 well-known artworks and randomly choose artworks from it each time the home view loads. Display one item per unique artwork.
+- [ ] Reuse existing static artwork data and image URLs; do not add live API requests or download images locally.
+- [ ] Provide home-page actions for Random Artist, Random Set, and About, consistent with the supplied reference and existing navigation behavior.
+- [ ] Keep the existing About page available as a separate view.
+- [ ] Verify home, artist, set, and About navigation, including browser back/forward, plus responsive layout.
+
 ---
 
 # BUGS
