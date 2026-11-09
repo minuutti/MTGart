@@ -17,6 +17,8 @@ const artistInfoModalEl = document.getElementById("artist-info-modal");
 const artistInfoContentEl = document.getElementById("artist-info-content");
 const aboutLinkEl = document.getElementById("about-link");
 const defaultDocumentTitle = document.title;
+let homeViewRequest = 0;
+let homeArtworkSelectionPromise = null;
 
 
 // ============================================================
@@ -133,8 +135,6 @@ async function loadData() {
 // URL ROUTING
 // ============================================================
 
-const BASE_PATH = "/MTGart";
-
 function getRoute() {
     const params = new URLSearchParams(window.location.search);
 
@@ -191,10 +191,12 @@ function loadInitialView() {
         }
     }
 
-    loadRandomArtist(false);
+    showHomePage();
 }
 
 function showAboutPage() {
+    homeViewRequest++;
+    document.getElementById("home-page")?.classList.add("hidden");
     document.getElementById("gallery")?.classList.add("hidden");
     document.querySelector(".page-heading")?.classList.add("hidden");
     document.getElementById("about-page")?.classList.remove("hidden");
@@ -208,10 +210,86 @@ function showAboutPage() {
 }
 
 function hideAboutPage() {
+    homeViewRequest++;
+    document.getElementById("home-page")?.classList.add("hidden");
     document.getElementById("gallery")?.classList.remove("hidden");
     document.querySelector(".page-heading")?.classList.remove("hidden");
     document.getElementById("about-page")?.classList.add("hidden");
     document.title = defaultDocumentTitle;
+}
+
+async function showHomePage() {
+    const request = ++homeViewRequest;
+    const homePage = document.getElementById("home-page");
+    const artworkContainer = document.getElementById("home-artworks");
+    const errorEl = document.getElementById("home-artwork-error");
+
+    document.getElementById("gallery")?.classList.add("hidden");
+    document.querySelector(".page-heading")?.classList.add("hidden");
+    document.getElementById("about-page")?.classList.add("hidden");
+    homePage.classList.remove("hidden");
+    document.title = defaultDocumentTitle;
+    currentArtist = null;
+    currentSet = null;
+    currentCards = [];
+    clearArtistInfo();
+    hideGridLoading();
+    artworkContainer.replaceChildren();
+    errorEl.classList.add("hidden");
+
+    try {
+        if (!homeArtworkSelectionPromise) {
+            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json")
+                .catch(error => {
+                    homeArtworkSelectionPromise = null;
+                    throw error;
+                });
+        }
+        const selection = await homeArtworkSelectionPromise;
+        if (!Array.isArray(selection) || selection.length !== 30 ||
+            selection.some(entry => !entry || typeof entry.illustration_id !== "string" ||
+                typeof entry.artistSlug !== "string") ||
+            new Set(selection.map(entry => entry.illustration_id)).size !== selection.length) {
+            throw new Error("Invalid home artwork selection");
+        }
+
+        const shuffled = [...selection];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        const featured = await Promise.all(shuffled.slice(0, 8).map(async entry => {
+            const artworks = await getArtistArtworks(entry.artistSlug);
+            const artwork = artworks.find(item => item.id === entry.illustration_id);
+            if (!artwork || !artwork.image) {
+                throw new Error(`Featured artwork not found: ${entry.illustration_id}`);
+            }
+            return artwork;
+        }));
+
+        if (request !== homeViewRequest) return;
+
+        featured.forEach(artwork => {
+            const image = document.createElement("img");
+            image.addEventListener("error", () => {
+                console.warn(`Could not load featured artwork image: ${artwork.id}`);
+                if (request === homeViewRequest) {
+                    errorEl.textContent = "Some featured artwork images could not be loaded.";
+                    errorEl.classList.remove("hidden");
+                }
+            }, { once: true });
+            image.src = artwork.image;
+            image.alt = `${artwork.cards[0]?.name || "Artwork"} by ${artwork.artist}`;
+            image.title = image.alt;
+            image.decoding = "async";
+            artworkContainer.appendChild(image);
+        });
+    } catch (error) {
+        console.error("Could not load featured artwork", error);
+        if (request !== homeViewRequest) return;
+        errorEl.textContent = "Featured artwork could not be loaded.";
+        errorEl.classList.remove("hidden");
+    }
 }
 
 
@@ -312,11 +390,11 @@ function showGridError(message) {
 }
 
 function artistUrl(artist) {
-    return `${BASE_PATH}/?artist=${encodeURIComponent(slugify(artist.name))}`;
+    return `${window.location.pathname}?artist=${encodeURIComponent(slugify(artist.name))}`;
 }
 
 function setUrl(setCode) {
-    return `${BASE_PATH}/?set=${encodeURIComponent(setCode)}`;
+    return `${window.location.pathname}?set=${encodeURIComponent(setCode)}`;
 }
 
 function aboutUrl() {
@@ -1658,6 +1736,23 @@ document.getElementById("random-set")?.addEventListener(
         loadRandomSet
     );
 
+document.getElementById("home-random-artist")?.addEventListener(
+    "click", () => loadRandomArtist(true)
+);
+document.getElementById("home-random-set")?.addEventListener(
+    "click", loadRandomSet
+);
+document.getElementById("home-link")?.addEventListener("click", event => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigate(window.location.pathname);
+});
+document.querySelector(".home-about-link")?.addEventListener("click", event => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigate(aboutUrl());
+});
+
 artistInfoBtnEl?.addEventListener(
     "click",
     event => {
@@ -1686,6 +1781,12 @@ function setupHeaderScroll() {
 
     const headerEl = document.querySelector("header");
     if (!headerEl) return;
+
+    const updateHeaderHeight = () => {
+        document.documentElement.style.setProperty("--header-height", `${headerEl.offsetHeight}px`);
+    };
+    updateHeaderHeight();
+    new ResizeObserver(updateHeaderHeight).observe(headerEl);
 
     const HIDE_THRESHOLD = 12;
     const SHOW_THRESHOLD = 8;
