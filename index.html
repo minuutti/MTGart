@@ -22,7 +22,7 @@
 
 <header>
     <div id="site-title">
-        MTG ART
+        <a id="home-link" href="./">Art from Magic</a>
         <section class="page-heading">
 
             <h1 id="title">
@@ -78,6 +78,23 @@
     ====================================================== -->
 
     <main>
+
+        <section id="home-page" class="home-page hidden" aria-labelledby="home-title">
+            <div class="home-hero">
+                <div id="home-artworks" class="home-artworks" aria-label="Featured artworks"></div>
+                <h1 id="home-title">Art of Magic</h1>
+            </div>
+            <div id="home-artwork-error" class="home-artwork-error hidden" role="alert"></div>
+            <div class="home-intro">
+                <p>Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined.</p>
+                <p class="home-disclaimer">Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast.</p>
+                <div class="home-actions">
+                    <button id="home-random-artist" type="button">Random Artist</button>
+                    <button id="home-random-set" type="button">Random Set</button>
+                    <a class="home-about-link" href="?page=about">About</a>
+                </div>
+            </div>
+        </section>
 
         <!-- =================================================
              ARTWORK GRID
