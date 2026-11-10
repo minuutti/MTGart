@@ -9,6 +9,9 @@
 
     <title>MTG Artist Gallery</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -22,7 +25,7 @@
 
 <header>
     <div id="site-title">
-        <a id="home-link" href="./">Art from Magic</a>
+        <a id="home-link" class="site-button" href="./">Art of Magic</a>
         <section class="page-heading">
 
             <h1 id="title">
@@ -38,11 +41,11 @@
     <div id="controls">
         <div id="artist-controls">
 
-            <button id="random-artist">
+            <button id="random-artist" class="site-button">
                 Random Artist
             </button>
 
-            <button id="search-artist">
+            <button id="search-artist" class="site-button">
                 Search Artist
             </button>
 
@@ -50,11 +53,11 @@
 
         <div id="set-controls">
 
-            <button id="random-set">
+            <button id="random-set" class="site-button">
                 Random Set
             </button>
 
-            <button id="search-set">
+            <button id="search-set" class="site-button">
                 Search Set
             </button>
 
@@ -62,7 +65,7 @@
 
         <div id="nav-controls">
 
-            <a id="about-link" href="?page=about">
+            <a id="about-link" class="site-button" href="?page=about">
                 About
             </a>
 
@@ -89,9 +92,9 @@
                 <p>Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined.</p>
                 <p class="home-disclaimer">Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast.</p>
                 <div class="home-actions">
-                    <button id="home-random-artist" type="button">Random Artist</button>
-                    <button id="home-random-set" type="button">Random Set</button>
-                    <a class="home-about-link" href="?page=about">About</a>
+                    <button id="home-random-artist" class="site-button" type="button">Random Artist</button>
+                    <button id="home-random-set" class="site-button" type="button">Random Set</button>
+                    <a class="home-about-link site-button" href="?page=about">About</a>
                 </div>
             </div>
         </section>

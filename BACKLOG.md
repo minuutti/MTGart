@@ -34,9 +34,9 @@ Requirements:
 
 ## ART-002 — Subtle fade in animation to grid
 
-Status: [ ] Todo
+Status: [w] Won't do — superseded by ART-015
 
-- [ ] There's an animation when the grid images appear to user
+Covered by ART-015.
 
 ## ART-003 — Fixed navigation header
 
@@ -248,6 +248,42 @@ Give visitors a welcoming, artwork-focused landing page instead of opening a ran
 - [x] Provide home-page actions for Random Artist, Random Set, and About, consistent with the supplied reference and existing navigation behavior.
 - [x] Keep the existing About page available as a separate view.
 - [x] Verify home, artist, set, and About navigation, including browser back/forward, plus responsive layout.
+
+## ART-012 — Visual design: typography and buttons
+
+Status: [x] Done
+
+### Spec
+- [x] Use Google Fonts' Instrument Serif for titles, including the menu title.
+- [x] Use Google Fonts' PT Sans for basic text.
+- [x] Change the menu title to "Art of Magic".
+- [x] Make buttons more compact and consistent in size.
+- [x] Set button borders to `#D3C89D`.
+
+## ART-013 — Hide reprints for single-printing cards
+
+Status: [ ] Todo
+
+### Spec
+- [ ] In the artwork modal, do not show the reprints control or reprints content when a card has only one printing.
+
+## ART-014 — Unify buttons across the menu and home page
+
+Status: [ ] Todo
+
+### Spec
+- [ ] Create a shared button component/style and use it for buttons in the menu and on the home page.
+- [ ] Ensure buttons in both locations have a consistent appearance and sizing.
+
+## ART-015 — Subtle gallery and home-page title animations
+
+Status: [ ] Todo
+
+### Spec
+- [ ] As the artwork grid loads, images fade in with a subtle, sequential stacking effect.
+- [ ] The home-page title and other titles animate smoothly into view.
+- [ ] Animations remain subtle and do not interfere with navigation or content loading.
+- [ ] Respect `prefers-reduced-motion` by disabling or reducing the animations.
 
 ---
 

@@ -1,8 +1,44 @@
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: "PT Sans", sans-serif;
   background: #111;
   color: white;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.site-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 110px;
+  height: 40px;
+  padding: 0 6px;
+  border: 1px solid #D3C89D;
+  border-radius: 20px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.site-button:hover {
+  background: #222;
 }
 
 .layout {
@@ -330,7 +366,8 @@ main {
 
 #home-link {
   color: #fff;
-  font-weight: bold;
+  font-family: "Instrument Serif", serif;
+  font-size: 1.35rem;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -381,7 +418,7 @@ main {
   margin: 0;
   transform: translateY(-50%);
   text-align: center;
-  font: normal clamp(3rem, 10vw, 12rem)/1 Georgia, serif;
+  font: normal clamp(3rem, 10vw, 12rem)/1 "Instrument Serif", serif;
   text-shadow: 0 2px 12px #111;
   pointer-events: none;
 }
@@ -413,42 +450,9 @@ main {
   margin-top: 2rem;
 }
 
-.home-actions button,
-.home-actions a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 1rem;
-  border: 1px solid #777;
-  border-radius: 22px;
-  background: #111;
-  color: #fff;
-  font: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.home-actions button:hover,
-.home-actions a:hover {
-  background: #222;
-}
-
 #controls{
   display: flex;
   gap: 10px;
-}
-
-#about-link {
-  display: inline-block;
-  padding: 15px;
-  border: 1px solid #777;
-  border-radius: 20px;
-  color: #fff;
-  text-decoration: none;
-}
-
-#about-link:hover {
-  background-color: #222;
 }
 
 .about-page {
@@ -612,26 +616,6 @@ main {
 .set-search-item.search-option--active {
   background: #2a2a2a;
 }
-
-
-/********* BUTTON *****************/
-
-header button{
-  background-color: #111;
-  color: #fff;
-  padding: 15px;
-  border-radius: 20px;
-  border: 1px solid #777;
-  cursor: pointer;
-}
-
-header button:hover {
-  background-color: #222;
-}
-
-/********* BUTTON *****************/
-
-
 
 
 /* =========================
@@ -855,11 +839,6 @@ header button:hover {
   #controls {
     flex-wrap: wrap;
     gap: 5px;
-  }
-
-  header button,
-  #about-link {
-    padding: 10px;
   }
 
   .home-artworks {
