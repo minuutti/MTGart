@@ -200,6 +200,7 @@ function showAboutPage() {
     document.getElementById("gallery")?.classList.add("hidden");
     document.querySelector(".page-heading")?.classList.add("hidden");
     document.getElementById("about-page")?.classList.remove("hidden");
+    animatePageTitle(document.querySelector("#about-page h1"));
     document.title = "About — MTG Artist Gallery";
 
     currentArtist = null;
@@ -228,6 +229,7 @@ async function showHomePage() {
     document.querySelector(".page-heading")?.classList.add("hidden");
     document.getElementById("about-page")?.classList.add("hidden");
     homePage.classList.remove("hidden");
+    animatePageTitle(document.getElementById("home-title"));
     document.title = defaultDocumentTitle;
     currentArtist = null;
     currentSet = null;
@@ -687,6 +689,7 @@ function renderArtistView(
     if (title) {
         title.textContent =
             artist.name;
+        animatePageTitle(title);
     }
 
     renderGrid(
@@ -810,6 +813,7 @@ async function loadSet(
 
         title.textContent =
             set.name;
+        animatePageTitle(title);
     }
 
     clearArtistInfo();
@@ -858,6 +862,7 @@ function renderGrid(artworkList) {
     }
 
     let loaded = 0;
+    let revealed = 0;
     const total = groups.length;
 
     function imageFinished() {
@@ -878,11 +883,26 @@ function renderGrid(artworkList) {
         img.decoding = "async";
         img.alt = `${group.artist} artwork`;
 
-        img.addEventListener("load", imageFinished, {
+        let imageHandled = false;
+        function handleImageFinished(isLoaded) {
+            if (imageHandled) {
+                return;
+            }
+
+            imageHandled = true;
+            if (isLoaded) {
+                const stagger = Math.min(revealed++, 8) * 45;
+                img.style.setProperty("--grid-image-enter-delay", `${stagger}ms`);
+                img.classList.add("grid-image-loaded");
+            }
+            imageFinished();
+        }
+
+        img.addEventListener("load", () => handleImageFinished(true), {
             once: true
         });
 
-        img.addEventListener("error", imageFinished, {
+        img.addEventListener("error", () => handleImageFinished(false), {
             once: true
         });
 
@@ -890,7 +910,7 @@ function renderGrid(artworkList) {
 
         // Handle images that are already cached.
         if (img.complete) {
-            imageFinished();
+            handleImageFinished(img.naturalWidth > 0);
         }
 
         wrapper.appendChild(img);
@@ -901,6 +921,16 @@ function renderGrid(artworkList) {
 
         grid.appendChild(wrapper);
     });
+}
+
+function animatePageTitle(title) {
+    if (!title) {
+        return;
+    }
+
+    title.classList.remove("title-enter");
+    void title.offsetWidth;
+    title.classList.add("title-enter");
 }
 
 

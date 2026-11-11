@@ -80,6 +80,55 @@ select {
   border-radius: 6px;
 }
 
+.grid img.grid-image-loaded {
+  animation: artwork-fade-in 480ms ease-out var(--grid-image-enter-delay, 0ms) both;
+}
+
+@keyframes artwork-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes title-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-hero h1.title-enter {
+  animation: home-title-fade-in 650ms ease-out both;
+}
+
+@keyframes home-title-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-50% + 12px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}
+
+.about-page h1.title-enter {
+  animation: title-fade-in 650ms ease-out both;
+}
+
+.page-heading h1.title-enter {
+  animation: title-fade-in 650ms ease-out both;
+}
+
 #ArtistModal{
   position: fixed;
   inset: 0;
@@ -351,6 +400,13 @@ header.site-header--hidden {
 @media (prefers-reduced-motion: reduce) {
   header {
     transition: none;
+  }
+
+  .grid img.grid-image-loaded,
+  .home-hero h1.title-enter,
+  .about-page h1.title-enter,
+  .page-heading h1.title-enter {
+    animation: none;
   }
 }
 

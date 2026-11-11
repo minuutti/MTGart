@@ -277,13 +277,13 @@ Status: [ ] Todo
 
 ## ART-015 — Subtle gallery and home-page title animations
 
-Status: [ ] Todo
+Status: [x] Done
 
 ### Spec
-- [ ] As the artwork grid loads, images fade in with a subtle, sequential stacking effect.
-- [ ] The home-page title and other titles animate smoothly into view.
-- [ ] Animations remain subtle and do not interfere with navigation or content loading.
-- [ ] Respect `prefers-reduced-motion` by disabling or reducing the animations.
+- [x] As the artwork grid loads, images fade in with a subtle, sequential stacking effect.
+- [x] The home-page title and other titles animate smoothly into view.
+- [x] Animations remain subtle and do not interfere with navigation or content loading.
+- [x] Respect `prefers-reduced-motion` by disabling or reducing the animations.
 
 ---
 
