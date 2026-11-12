@@ -271,8 +271,17 @@ async function showHomePage() {
 
         if (request !== homeViewRequest) return;
 
+        let nextRevealAt = 0;
         featured.forEach(artwork => {
             const image = document.createElement("img");
+            image.addEventListener("load", () => {
+                if (request !== homeViewRequest) return;
+                const now = performance.now();
+                const delay = Math.max(0, nextRevealAt - now);
+                nextRevealAt = now + delay + 160;
+                image.style.setProperty("--home-image-enter-delay", `${delay}ms`);
+                image.classList.add("home-image-loaded");
+            }, { once: true });
             image.addEventListener("error", () => {
                 console.warn(`Could not load featured artwork image: ${artwork.id}`);
                 if (request === homeViewRequest) {
@@ -689,7 +698,6 @@ function renderArtistView(
     if (title) {
         title.textContent =
             artist.name;
-        animatePageTitle(title);
     }
 
     renderGrid(
@@ -813,7 +821,6 @@ async function loadSet(
 
         title.textContent =
             set.name;
-        animatePageTitle(title);
     }
 
     clearArtistInfo();
@@ -862,7 +869,6 @@ function renderGrid(artworkList) {
     }
 
     let loaded = 0;
-    let revealed = 0;
     const total = groups.length;
 
     function imageFinished() {
@@ -884,25 +890,20 @@ function renderGrid(artworkList) {
         img.alt = `${group.artist} artwork`;
 
         let imageHandled = false;
-        function handleImageFinished(isLoaded) {
+        function handleImageFinished() {
             if (imageHandled) {
                 return;
             }
 
             imageHandled = true;
-            if (isLoaded) {
-                const stagger = Math.min(revealed++, 8) * 45;
-                img.style.setProperty("--grid-image-enter-delay", `${stagger}ms`);
-                img.classList.add("grid-image-loaded");
-            }
             imageFinished();
         }
 
-        img.addEventListener("load", () => handleImageFinished(true), {
+        img.addEventListener("load", handleImageFinished, {
             once: true
         });
 
-        img.addEventListener("error", () => handleImageFinished(false), {
+        img.addEventListener("error", handleImageFinished, {
             once: true
         });
 
@@ -910,7 +911,7 @@ function renderGrid(artworkList) {
 
         // Handle images that are already cached.
         if (img.complete) {
-            handleImageFinished(img.naturalWidth > 0);
+            handleImageFinished();
         }
 
         wrapper.appendChild(img);
