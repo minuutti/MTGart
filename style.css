@@ -80,10 +80,6 @@ select {
   border-radius: 6px;
 }
 
-.grid img.grid-image-loaded {
-  animation: artwork-fade-in 480ms ease-out var(--grid-image-enter-delay, 0ms) both;
-}
-
 @keyframes artwork-fade-in {
   from {
     opacity: 0;
@@ -122,10 +118,6 @@ select {
 }
 
 .about-page h1.title-enter {
-  animation: title-fade-in 650ms ease-out both;
-}
-
-.page-heading h1.title-enter {
   animation: title-fade-in 650ms ease-out both;
 }
 
@@ -402,10 +394,8 @@ header.site-header--hidden {
     transition: none;
   }
 
-  .grid img.grid-image-loaded,
   .home-hero h1.title-enter,
-  .about-page h1.title-enter,
-  .page-heading h1.title-enter {
+  .about-page h1.title-enter {
     animation: none;
   }
 }
@@ -456,6 +446,21 @@ main {
   aspect-ratio: 5 / 4;
   object-fit: cover;
   background: #222;
+  opacity: 0;
+}
+
+.home-artworks img.home-image-loaded {
+  animation: artwork-fade-in 480ms ease-out var(--home-image-enter-delay, 0ms) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-artworks img {
+    opacity: 1;
+  }
+
+  .home-artworks img.home-image-loaded {
+    animation: none;
+  }
 }
 
 .home-artworks img:first-child {
