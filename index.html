@@ -11,8 +11,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Playfair+Display:wght@400&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=visual-updates-6">
 
 </head>
 
@@ -25,7 +25,7 @@
 
 <header>
     <div id="site-title">
-        <a id="home-link" class="site-button" href="./">Art of Magic</a>
+        <a id="home-link" href="./">Art of Magic</a>
         <section class="page-heading">
 
             <h1 id="title">
@@ -84,17 +84,35 @@
 
         <section id="home-page" class="home-page hidden" aria-labelledby="home-title">
             <div class="home-hero">
-                <div id="home-artworks" class="home-artworks" aria-label="Featured artworks"></div>
-                <h1 id="home-title">Art of Magic</h1>
-            </div>
-            <div id="home-artwork-error" class="home-artwork-error hidden" role="alert"></div>
-            <div class="home-intro">
-                <p>Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined.</p>
-                <p class="home-disclaimer">Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast.</p>
-                <div class="home-actions">
-                    <button id="home-random-artist" class="site-button" type="button">Random Artist</button>
-                    <button id="home-random-set" class="site-button" type="button">Random Set</button>
-                    <a class="home-about-link site-button" href="?page=about">About</a>
+                <div class="home-hero-copy">
+                    <h1 id="home-title">Art of Magic</h1>
+                    <div class="home-actions">
+                        <button class="site-button" data-home-action="search-artist" type="button">Search Artist</button>
+                        <button class="site-button" data-home-action="search-set" type="button">Search Set</button>
+                        <button class="site-button" data-home-action="random-artist" type="button">Random Artist</button>
+                        <button class="site-button" data-home-action="random-set" type="button">Random Set</button>
+                    </div>
+                    <div id="home-artwork-error" class="home-artwork-error hidden" role="alert"></div>
+                </div>
+                <div id="home-artworks" class="home-gallery" role="group" aria-label="Featured artworks">
+                    <div class="home-artwork-column"></div>
+                    <div class="home-artwork-column home-artwork-column-center">
+                        <div class="home-intro">
+                            <h2>This is a gallery, not a card database</h2>
+                            <p>Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined.</p>
+                        </div>
+                        <div class="home-center-artworks"></div>
+                    </div>
+                    <div class="home-artwork-column"></div>
+                </div>
+                <div class="home-explore">
+                    <h2>Look beyond the cards</h2>
+                    <div class="home-actions">
+                        <button class="site-button" data-home-action="search-artist" type="button">Search Artist</button>
+                        <button class="site-button" data-home-action="search-set" type="button">Search Set</button>
+                        <button class="site-button" data-home-action="random-artist" type="button">Random Artist</button>
+                        <button class="site-button" data-home-action="random-set" type="button">Random Set</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -145,6 +163,16 @@
         </article>
 
     </main>
+
+    <footer class="site-footer">
+        <div class="site-footer-inner">
+            <div class="site-footer-brand">
+                <p class="site-footer-name">Art of Magic</p>
+                <p class="site-footer-slogan">Discover the artists behind the worlds.</p>
+            </div>
+            <p class="site-footer-disclaimer">Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast.</p>
+        </div>
+    </footer>
 
 
     <!-- =====================================================
@@ -272,7 +300,7 @@
 
 <div id="SetSearchModal" class="modal hidden">
 
-    <div class="modal-content">
+    <div class="modal-content artist-search-modal">
 
         <button
             type="button"
@@ -312,7 +340,7 @@
          JAVASCRIPT
     ====================================================== -->
 
-    <script src="app.js"></script>
+    <script src="app.js?v=visual-updates-3"></script>
 
 </body>
 

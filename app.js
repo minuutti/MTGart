@@ -223,6 +223,8 @@ async function showHomePage() {
     const request = ++homeViewRequest;
     const homePage = document.getElementById("home-page");
     const artworkContainer = document.getElementById("home-artworks");
+    const artworkColumns = artworkContainer.querySelectorAll(".home-artwork-column");
+    const artworkTargets = [artworkColumns[0], artworkContainer.querySelector(".home-center-artworks"), artworkColumns[2]];
     const errorEl = document.getElementById("home-artwork-error");
 
     document.getElementById("gallery")?.classList.add("hidden");
@@ -236,19 +238,19 @@ async function showHomePage() {
     currentCards = [];
     clearArtistInfo();
     hideGridLoading();
-    artworkContainer.replaceChildren();
+    artworkTargets.forEach(target => target.replaceChildren());
     errorEl.classList.add("hidden");
 
     try {
         if (!homeArtworkSelectionPromise) {
-            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json")
+            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json?v=3")
                 .catch(error => {
                     homeArtworkSelectionPromise = null;
                     throw error;
                 });
         }
         const selection = await homeArtworkSelectionPromise;
-        if (!Array.isArray(selection) || selection.length !== 30 ||
+        if (!Array.isArray(selection) || selection.length < 12 ||
             selection.some(entry => !entry || typeof entry.illustration_id !== "string" ||
                 typeof entry.artistSlug !== "string") ||
             new Set(selection.map(entry => entry.illustration_id)).size !== selection.length) {
@@ -260,7 +262,7 @@ async function showHomePage() {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-        const featured = await Promise.all(shuffled.slice(0, 8).map(async entry => {
+        const featured = await Promise.all(shuffled.slice(0, 12).map(async entry => {
             const artworks = await getArtistArtworks(entry.artistSlug);
             const artwork = artworks.find(item => item.id === entry.illustration_id);
             if (!artwork || !artwork.image) {
@@ -272,15 +274,21 @@ async function showHomePage() {
         if (request !== homeViewRequest) return;
 
         let nextRevealAt = 0;
-        featured.forEach(artwork => {
+        const columnOrder = [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1];
+        featured.forEach((artwork, index) => {
+            const frame = document.createElement("button");
+            frame.className = "home-artwork-frame";
+            frame.type = "button";
+            const cardName = artwork.cards[0]?.name || "Artwork";
+            frame.setAttribute("aria-label", `View ${cardName} by ${artwork.artist}`);
             const image = document.createElement("img");
             image.addEventListener("load", () => {
                 if (request !== homeViewRequest) return;
                 const now = performance.now();
                 const delay = Math.max(0, nextRevealAt - now);
                 nextRevealAt = now + delay + 160;
-                image.style.setProperty("--home-image-enter-delay", `${delay}ms`);
-                image.classList.add("home-image-loaded");
+                frame.style.setProperty("--home-image-enter-delay", `${delay}ms`);
+                frame.classList.add("home-image-loaded");
             }, { once: true });
             image.addEventListener("error", () => {
                 console.warn(`Could not load featured artwork image: ${artwork.id}`);
@@ -290,10 +298,19 @@ async function showHomePage() {
                 }
             }, { once: true });
             image.src = artwork.image;
-            image.alt = `${artwork.cards[0]?.name || "Artwork"} by ${artwork.artist}`;
-            image.title = image.alt;
+            image.alt = "";
             image.decoding = "async";
-            artworkContainer.appendChild(image);
+            const caption = document.createElement("span");
+            caption.className = "home-artwork-caption";
+            const title = document.createElement("strong");
+            title.textContent = cardName;
+            const artist = document.createElement("span");
+            artist.textContent = artwork.artist;
+            caption.append(title, artist);
+            frame.appendChild(image);
+            frame.appendChild(caption);
+            frame.addEventListener("click", () => openModal(artwork, frame));
+            artworkTargets[columnOrder[index]].appendChild(frame);
         });
     } catch (error) {
         console.error("Could not load featured artwork", error);
@@ -939,8 +956,11 @@ function animatePageTitle(title) {
 // MODAL
 // ============================================================
 
+let artworkModalTrigger = null;
+
 async function openModal(
-    artwork
+    artwork,
+    trigger = null
 ) {
 
     const modal =
@@ -1159,6 +1179,10 @@ async function openModal(
     modal.classList.remove(
         "hidden"
     );
+    artworkModalTrigger = trigger;
+    if (trigger) {
+        modal.querySelector(".modal-close")?.focus();
+    }
 }
 
 
@@ -1188,6 +1212,10 @@ function closeModal() {
         window.scrollTo(0, artworkModalScrollY);
         artworkModalBodyStyles = null;
     }
+    if (artworkModalTrigger?.isConnected && artworkModalTrigger.getClientRects().length) {
+        artworkModalTrigger.focus({ preventScroll: true });
+    }
+    artworkModalTrigger = null;
 }
 
 
@@ -1214,12 +1242,21 @@ function setupModal() {
             }
         }
     );
+    modal.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            event.preventDefault();
+            closeModal();
+        }
+    });
 }
 
 
 // ============================================================
 // ARTIST SEARCH
 // ============================================================
+
+let artistSearchTrigger;
+let setSearchTrigger;
 
 function showArtistSearch() {
 
@@ -1232,6 +1269,7 @@ function showArtistSearch() {
         return;
     }
 
+    artistSearchTrigger = document.activeElement;
     modal.classList.remove(
         "hidden"
     );
@@ -1272,7 +1310,9 @@ function closeArtistSearch() {
     }
 
     resetSearchNavigation("artist-search", "artist-list");
-    document.getElementById("search-artist")?.focus();
+    if (artistSearchTrigger instanceof HTMLElement && artistSearchTrigger.isConnected) {
+        artistSearchTrigger.focus();
+    }
 }
 
 function resetSearchNavigation(inputId, listId) {
@@ -1508,6 +1548,7 @@ function showSetSearch() {
         return;
     }
 
+    setSearchTrigger = document.activeElement;
     modal.classList.remove(
         "hidden"
     );
@@ -1548,7 +1589,9 @@ function closeSetSearch() {
     }
 
     resetSearchNavigation("set-search", "set-list");
-    document.getElementById("search-set")?.focus();
+    if (setSearchTrigger instanceof HTMLElement && setSearchTrigger.isConnected) {
+        setSearchTrigger.focus();
+    }
 }
 
 
@@ -1767,23 +1810,22 @@ document.getElementById("random-set")?.addEventListener(
         loadRandomSet
     );
 
-document.getElementById("home-random-artist")?.addEventListener(
-    "click", () => loadRandomArtist(true)
-);
-document.getElementById("home-random-set")?.addEventListener(
-    "click", loadRandomSet
-);
+const homeActions = {
+    "search-artist": showArtistSearch,
+    "search-set": showSetSearch,
+    "random-artist": () => loadRandomArtist(true),
+    "random-set": loadRandomSet
+};
+document.querySelectorAll("[data-home-action]").forEach(button => {
+    button.addEventListener("click", () => {
+        homeActions[button.dataset.homeAction]();
+    });
+});
 document.getElementById("home-link")?.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     navigate(window.location.pathname);
 });
-document.querySelector(".home-about-link")?.addEventListener("click", event => {
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    navigate(aboutUrl());
-});
-
 artistInfoBtnEl?.addEventListener(
     "click",
     event => {

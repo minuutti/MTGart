@@ -1,15 +1,25 @@
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: "PT Sans", sans-serif;
-  background: #111;
-  color: white;
+  background: #111213;
+  background-image: radial-gradient(ellipse at 50% 0, #202224 0, #111213 65%);
+  color: #f0f0f0;
 }
 
 h1,
 h2,
 h3 {
-  font-family: "Instrument Serif", serif;
+  font-family: "Playfair Display", serif;
   font-weight: 400;
+}
+
+h2,
+h3,
+h4 {
+  color: #c1d1dc;
 }
 
 button,
@@ -26,10 +36,10 @@ select {
   box-sizing: border-box;
   min-height: 44px;
   padding: 0.6em 1.15em;
-  border: 1px solid #887f62;
+  border: 1px solid #62676b;
   border-radius: 999px;
-  background: #1b1a17;
-  color: #f7f3e8;
+  background: #242628;
+  color: #f0f0f0;
   font: inherit;
   line-height: 1.2;
   text-align: center;
@@ -40,22 +50,23 @@ select {
 
 .site-button:hover,
 .reprints-toggle:hover {
-  border-color: #d3c89d;
-  background: #343025;
+  border-color: #aeb8bf;
+  background: #383c3f;
   color: #fff;
 }
 
 .site-button:active,
 .reprints-toggle:active {
   transform: translateY(1px);
-  background: #49412e;
+  background: #484e52;
 }
 
 .site-button:focus-visible,
+#home-link:focus-visible,
 .reprints-toggle:focus-visible,
 .modal-close:focus-visible,
 .artistSearchClose:focus-visible {
-  outline: 2px solid #eadca9;
+  outline: 2px solid #c1d1dc;
   outline-offset: 3px;
 }
 
@@ -67,8 +78,8 @@ select {
 }
 
 .reprints-toggle[aria-expanded="true"] {
-  border-color: #d3c89d;
-  background: #49412e;
+  border-color: #aeb8bf;
+  background: #484e52;
 }
 
 .layout {
@@ -106,7 +117,7 @@ select {
 
 .grid img {
   width: 100%;
-  cursor: pointer;
+  cursor: zoom-in;
   border-radius: 6px;
 }
 
@@ -133,18 +144,7 @@ select {
 }
 
 .home-hero h1.title-enter {
-  animation: home-title-fade-in 650ms ease-out both;
-}
-
-@keyframes home-title-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-50% + 12px));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(-50%);
-  }
+  animation: title-fade-in 650ms ease-out both;
 }
 
 .about-page h1.title-enter {
@@ -182,11 +182,14 @@ select {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
+  box-sizing: border-box;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.84);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
+  animation: modal-backdrop-enter 220ms ease-out;
 }
 
 .hidden {
@@ -194,24 +197,46 @@ select {
 }
 
 .modal-content {
-  width: 95%;
-  height: 95%;
-  background: #222;
+  color-scheme: dark;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 100%;
+  background: #202224;
+  background-image: linear-gradient(145deg, #292b2d, #202224 65%);
+  border: 1px solid #51565a;
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
   position: relative;
+  animation: modal-content-enter 240ms ease-out;
+}
+
+@keyframes modal-backdrop-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .artwork-modal-content {
   height: auto;
-  max-height: 95vh;
-  max-height: 95dvh;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
 .modal-close {
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 20px;
+  top: 20px;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -220,8 +245,8 @@ select {
   font-size: 30px;
   line-height: 1;
   cursor: pointer;
-  background: #292929;
-  border: 1px solid #555;
+  background: #303336;
+  border: 1px solid #62676b;
   border-radius: 50%;
   color: #fff;
   padding: 0;
@@ -230,8 +255,8 @@ select {
 
 .modal-close:hover,
 .artwork-modal .modal-close:hover {
-  background: #49412e;
-  border-color: #d3c89d;
+  background: #484e52;
+  border-color: #aeb8bf;
 }
 
 .modal-close:active {
@@ -273,6 +298,8 @@ select {
   justify-content: center;
   align-items: center;
   background: #000;
+  border-radius: 15px 0 0 15px;
+  overflow: hidden;
 }
 
 .modal-artwork img {
@@ -286,21 +313,47 @@ select {
   flex: 0 1 400px;
   max-width: 400px;
   min-width: 0;
-  padding: 18px;
+  padding: 64px 28px 28px;
   box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.modal-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 3.5vw, 2.5rem);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.modal-info a,
+.artist-info-content a {
+  color: #c1d1dc;
+  text-decoration-color: #81919b;
+  text-underline-offset: 3px;
+}
+
+.modal-info a:hover,
+.artist-info-content a:hover {
+  color: #f0f5f8;
+  text-decoration-color: currentColor;
+}
+
+.modal-info a:focus-visible,
+.artist-info-content a:focus-visible {
+  outline: 2px solid #c1d1dc;
+  outline-offset: 3px;
 }
 
 .artwork-modal .modal-close {
   position: sticky;
-  top: 0;
+  top: 16px;
   z-index: 2;
   display: block;
   width: 48px;
   height: 48px;
-  margin-left: auto;
-  margin-bottom: -48px;
+  margin: 16px 16px -64px auto;
   padding: 0;
-  background: rgba(17, 17, 17, 0.9);
+  background: rgba(30, 32, 34, 0.95);
   border-radius: 50%;
 }
 
@@ -352,6 +405,14 @@ select {
   object-position: center center;
 
   display: block;
+  transition: transform 280ms ease, filter 280ms ease;
+}
+
+@media (hover: hover) {
+  .imageWrapper:hover img {
+    transform: scale(1.035);
+    filter: brightness(1.08);
+  }
 }
 
 .imageWrapper.loading::before {
@@ -423,10 +484,11 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: #111;
+  background: #181a1c;
+  background-image: linear-gradient(180deg, #222426, #181a1c);
   padding: 10px 20px;
   box-sizing: border-box;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #393d40;
   transition: transform 180ms ease;
 }
 
@@ -437,18 +499,27 @@ header.site-header--hidden {
 @media (prefers-reduced-motion: reduce) {
   header,
   .site-button,
+  #home-link,
   .reprints-toggle,
-  .modal-close {
+  .modal-close,
+  .imageWrapper img {
     transition: none;
   }
 
+  .imageWrapper:hover img {
+    transform: none;
+  }
+
   .home-hero h1.title-enter,
-  .about-page h1.title-enter {
+  .about-page h1.title-enter,
+  .modal,
+  .modal-content {
     animation: none;
   }
 }
 
 main {
+  flex: 1;
   padding-top: var(--header-height, 80px);
 }
 
@@ -456,107 +527,218 @@ main {
   display: flex;
   align-items: center;
   gap: 20px;
+  min-width: 0;
 }
 
 #home-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: #fff;
-  font-family: "Instrument Serif", serif;
-  font-size: 1.35rem;
+  font-family: "Playfair Display", serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.1;
   text-decoration: none;
   white-space: nowrap;
+  transition: color 160ms ease;
+}
+
+#home-link:hover {
+  color: #c1d1dc;
+}
+
+#home-link:active {
+  color: #aeb8bf;
 }
 
 .home-page {
   overflow: hidden;
-  padding: clamp(2rem, 5vw, 4rem) 0 5rem;
+  padding: 0 0 clamp(3rem, 6vw, 6rem);
+  text-align: center;
 }
 
 .home-hero {
+  padding: clamp(4rem, 7vw, 16rem) 0 0;
+  box-sizing: border-box;
+}
+
+.home-hero-copy {
   position: relative;
-  display: grid;
-  align-items: center;
-  min-height: clamp(12rem, 40vw, 40rem);
+  width: min(100% - 2rem, 3200px);
+  margin: 0 auto;
+  text-align: center;
 }
 
-.home-artworks {
+.home-gallery {
+  --artwork-gap: clamp(0.35rem, 0.6vw, 1.5rem);
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  grid-template-rows: repeat(2, 1fr);
-  gap: clamp(0.5rem, 2vw, 2rem);
-  align-items: center;
-  width: 110%;
-  margin-left: -5%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--artwork-gap);
+  width: 100%;
+  margin: clamp(3rem, 5vw, 12rem) 0 0;
 }
 
-.home-artworks img {
+.home-artwork-column,
+.home-center-artworks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--artwork-gap);
+  min-width: 0;
+}
+
+.home-artwork-column-center {
+  padding-top: clamp(2rem, 5vw, 12rem);
+}
+
+.home-artwork-frame {
+  position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 5 / 4;
-  object-fit: cover;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  border-radius: 4px;
   background: #222;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
   opacity: 0;
 }
 
-.home-artworks img.home-image-loaded {
+.home-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #222;
+  transform: scale(1.12);
+}
+
+.home-artwork-frame.home-image-loaded {
   animation: artwork-fade-in 480ms ease-out var(--home-image-enter-delay, 0ms) both;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .home-artworks img {
+.home-artwork-caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 2.5rem 1rem 1rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.3;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.home-artwork-frame:hover .home-artwork-caption,
+.home-artwork-frame:focus-visible .home-artwork-caption {
+  opacity: 1;
+}
+
+.home-artwork-frame:focus-visible {
+  outline: 3px solid #c1d1dc;
+  outline-offset: -3px;
+}
+
+@media (hover: none) {
+  .home-artwork-caption {
     opacity: 1;
   }
+}
 
-  .home-artworks img.home-image-loaded {
+@media (prefers-reduced-motion: reduce) {
+  .home-artwork-frame.home-image-loaded {
+    opacity: 1;
     animation: none;
   }
-}
 
-.home-artworks img:first-child {
-  grid-column: 1;
-  grid-row: 1 / 3;
-}
-
-.home-artworks img:last-child {
-  grid-column: 5;
-  grid-row: 1 / 3;
+  .home-artwork-caption {
+    transition: none;
+  }
 }
 
 .home-hero h1 {
-  position: absolute;
-  inset: 50% 0 auto;
   margin: 0;
-  transform: translateY(-50%);
-  text-align: center;
-  font: normal clamp(3rem, 10vw, 12rem)/1 "Instrument Serif", serif;
-  text-shadow: 0 2px 12px #111;
+  font: 400 clamp(3.2rem, 10vw, 24rem)/1 "Koulen", sans-serif;
+  letter-spacing: 0.02em;
   pointer-events: none;
 }
 
-.home-artwork-error,
-.home-intro {
-  width: min(100% - 2.5rem, 45ch);
-  margin: 2rem auto 0;
-  line-height: 1.5;
-}
-
 .home-artwork-error {
+  margin: 1.5rem auto 0;
   color: #ffb1a8;
 }
 
 .home-intro {
-  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  padding: 0 clamp(0.75rem, 3vw, 7rem) clamp(2rem, 4vw, 8rem);
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
-.home-disclaimer {
-  color: #bbb;
-  font-size: 0.85em;
+.home-intro h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.home-intro p {
+  margin: 0;
 }
 
 .home-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
   margin-top: 2rem;
+}
+
+.home-explore {
+  padding: clamp(5rem, 10vw, 20rem) 1.25rem;
+  text-align: center;
+}
+
+.home-explore h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.75vw, 2rem);
+}
+
+.site-footer {
+  padding: 2.5rem clamp(20px, 5vw, 64px);
+  border-top: 1px solid #393d40;
+  background: linear-gradient(180deg, #1d1f21, #171819);
+}
+
+.site-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem 3rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.site-footer-name {
+  margin: 0 0 0.4rem;
+  font: 400 1.5rem/1.2 "Playfair Display", serif;
+}
+
+.site-footer-slogan,
+.site-footer-disclaimer {
+  margin: 0;
+  color: #bcbfc1;
+  line-height: 1.6;
+}
+
+.site-footer-disclaimer {
+  max-width: 48ch;
+  font-size: 0.875rem;
 }
 
 #controls,
@@ -581,23 +763,22 @@ main {
 .about-page h1 {
   margin: 0 0 1.5rem;
   color: #fff;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
   line-height: 1.15;
 }
 
 .about-page h2,
 .about-page h3 {
   margin: 2rem 0 0.75rem;
-  color: #fff;
   line-height: 1.3;
 }
 
 .about-page h2 {
-  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-size: clamp(1.5rem, 2.75vw, 2rem);
 }
 
 .about-page h3 {
-  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-size: clamp(1.25rem, 2.25vw, 1.6rem);
 }
 
 .about-page p {
@@ -610,9 +791,17 @@ main {
 ========================= */
 
 .artist-search-modal {
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 620px;
+  padding: clamp(20px, 4vw, 32px);
+  overflow: hidden;
+}
+
+.artist-search-modal h2 {
+  margin: 0 60px 24px 0;
+  font-size: clamp(1.85rem, 4vw, 2.5rem);
+  line-height: 1.2;
 }
 
 .artistSearchModal {
@@ -681,10 +870,10 @@ main {
 
   box-sizing: border-box;
 
-  border: 1px solid #444;
-  border-radius: 6px;
+  border: 1px solid #62676b;
+  border-radius: 10px;
 
-  background: #222;
+  background: #161819;
   color: #fff;
 
   font-size: 18px;
@@ -694,7 +883,8 @@ main {
 
 #artist-search:focus,
 #set-search:focus {
-  border-color: #777;
+  border-color: #aeb8bf;
+  box-shadow: 0 0 0 3px rgba(174, 184, 191, 0.2);
 }
 
 
@@ -704,11 +894,11 @@ main {
 
 #artist-list,
 #set-list {
-  margin-top: 15px;
-
-  max-height: 500px;
-
+  margin-top: 16px;
+  min-height: 0;
+  max-height: min(500px, 55vh);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 
@@ -728,7 +918,7 @@ main {
 .set-search-item:hover,
 .artist-search-item.search-option--active,
 .set-search-item.search-option--active {
-  background: #2a2a2a;
+  background: #383c3f;
 }
 
 
@@ -769,6 +959,32 @@ main {
 .artistInfo {
 }
 
+.artist-info-modal-content {
+  width: min(100%, 620px);
+  padding: clamp(24px, 4vw, 36px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.artist-info-content {
+  line-height: 1.6;
+}
+
+.artist-info-copy h3 {
+  margin: 0 0 1rem;
+  padding-right: 56px;
+  font-size: clamp(1.85rem, 4vw, 2.5rem);
+  line-height: 1.15;
+}
+
+.artist-info-portrait {
+  display: block;
+  width: min(100%, 180px);
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
 .artist-header {
   display: flex;
   gap: 20px;
@@ -807,10 +1023,10 @@ main {
 }
 
 .reprint {
-  padding: 10px;
-  background: #111;
-  border-radius: 6px;
-  border-left: 3px solid #666;
+  padding: 12px 14px;
+  background: #191b1c;
+  border-radius: 8px;
+  border-left: 3px solid #858e94;
 }
 
 .reprint strong {
@@ -827,8 +1043,6 @@ main {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: #4a9eff;
-  text-decoration: none;
 }
 
 .reprint a:hover {
@@ -838,8 +1052,9 @@ main {
 .card-preview {
   margin: 15px 0;
   padding: 15px;
-  background: #111;
-  border-radius: 6px;
+  background: #161819;
+  border: 1px solid #393d40;
+  border-radius: 10px;
   text-align: center;
 }
 
@@ -856,12 +1071,16 @@ main {
 
 @media (max-width: 600px) {
 
+  .modal {
+    padding: 12px;
+  }
+
   .modal.artwork-modal {
     padding:
-      env(safe-area-inset-top)
-      env(safe-area-inset-right)
-      env(safe-area-inset-bottom)
-      env(safe-area-inset-left);
+      max(12px, env(safe-area-inset-top))
+      max(12px, env(safe-area-inset-right))
+      max(12px, env(safe-area-inset-bottom))
+      max(12px, env(safe-area-inset-left));
     box-sizing: border-box;
     align-items: stretch;
   }
@@ -884,6 +1103,7 @@ main {
     max-height: 52vh;
     max-height: 52dvh;
     overflow: hidden;
+    border-radius: 15px 15px 0 0;
   }
 
   .modal-artwork img {
@@ -901,7 +1121,7 @@ main {
     flex: none;
     width: 100%;
     max-width: none;
-    padding: 16px;
+    padding: 20px;
     font-size: 16px;
     line-height: 1.5;
   }
@@ -943,6 +1163,14 @@ main {
     padding: 10px;
   }
 
+  #site-title {
+    gap: 12px;
+  }
+
+  #home-link {
+    font-size: 1.2rem;
+  }
+
   #controls,
   #artist-controls,
   #set-controls,
@@ -950,16 +1178,62 @@ main {
     gap: 6px;
   }
 
-  .home-artworks {
-    width: 100%;
-    margin: 0;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .home-hero {
+    padding-top: 3rem;
   }
 
-  .home-artworks img:first-child,
-  .home-artworks img:last-child {
-    grid-column: auto;
-    grid-row: auto;
+  .home-gallery {
+    --artwork-gap: 0.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 200%;
+    margin-inline: -50%;
+  }
+
+  .home-artwork-column,
+  .home-center-artworks,
+  .home-artwork-column-center {
+    display: contents;
+  }
+
+  .home-intro {
+    grid-area: 1 / 1 / 2 / 4;
+    box-sizing: border-box;
+    width: 50%;
+    justify-self: center;
+    padding: 0 1.5rem 1rem;
+  }
+
+  .home-artwork-column:first-child > .home-artwork-frame:first-child {
+    grid-area: 2 / 1;
+  }
+
+  .home-center-artworks > .home-artwork-frame:first-child {
+    grid-area: 2 / 2;
+  }
+
+  .home-artwork-column:last-child > .home-artwork-frame:first-child {
+    grid-area: 2 / 3;
+  }
+
+  .home-artwork-frame:nth-child(n + 2) {
+    display: none;
+  }
+
+  .home-artwork-column:first-child .home-artwork-caption,
+  .home-artwork-column:last-child .home-artwork-caption {
+    box-sizing: border-box;
+    width: 25%;
+    padding: 1.5rem 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    overflow-wrap: anywhere;
+  }
+
+  .home-artwork-column:first-child .home-artwork-caption {
+    left: auto;
+  }
+
+  .home-artwork-column:last-child .home-artwork-caption {
+    right: auto;
   }
 
 }
@@ -986,18 +1260,20 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  height: 47px; /* same as header buttons, so the header height never changes */
+  min-width: 0;
+  min-height: 56px;
 }
 
 .page-heading h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: clamp(1.5rem, 2.5vw, 1.75rem);
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .artist-info-link {
   margin-top: 1px;
-  color: #4a9eff;
+  color: #c1d1dc;
   font-size: 13px;
   line-height: 1.2;
   text-decoration: none;
