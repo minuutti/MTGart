@@ -18,27 +18,57 @@ select {
   font: inherit;
 }
 
-.site-button {
+.site-button,
+.reprints-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 110px;
-  height: 40px;
-  padding: 0 6px;
-  border: 1px solid #D3C89D;
-  border-radius: 20px;
-  background: #111;
-  color: #fff;
+  min-height: 44px;
+  padding: 0.6em 1.15em;
+  border: 1px solid #887f62;
+  border-radius: 999px;
+  background: #1b1a17;
+  color: #f7f3e8;
   font: inherit;
+  line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  white-space: nowrap;
   cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
-.site-button:hover {
-  background: #222;
+.site-button:hover,
+.reprints-toggle:hover {
+  border-color: #d3c89d;
+  background: #343025;
+  color: #fff;
+}
+
+.site-button:active,
+.reprints-toggle:active {
+  transform: translateY(1px);
+  background: #49412e;
+}
+
+.site-button:focus-visible,
+.reprints-toggle:focus-visible,
+.modal-close:focus-visible,
+.artistSearchClose:focus-visible {
+  outline: 2px solid #eadca9;
+  outline-offset: 3px;
+}
+
+.site-button:disabled,
+.reprints-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reprints-toggle[aria-expanded="true"] {
+  border-color: #d3c89d;
+  background: #49412e;
 }
 
 .layout {
@@ -182,16 +212,30 @@ select {
   position: absolute;
   right: 10px;
   top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
   font-size: 30px;
+  line-height: 1;
   cursor: pointer;
-  background: none;
-  border: none;
+  background: #292929;
+  border: 1px solid #555;
+  border-radius: 50%;
   color: #fff;
-  padding: 10px;
+  padding: 0;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
-.modal-close:hover {
-  opacity: 0.8;
+.modal-close:hover,
+.artwork-modal .modal-close:hover {
+  background: #49412e;
+  border-color: #d3c89d;
+}
+
+.modal-close:active {
+  transform: scale(0.95);
 }
 
 .close {
@@ -374,6 +418,7 @@ header {
   position: fixed;
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   top: 0;
   left: 0;
   width: 100%;
@@ -390,7 +435,10 @@ header.site-header--hidden {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  header {
+  header,
+  .site-button,
+  .reprints-toggle,
+  .modal-close {
     transition: none;
   }
 
@@ -511,8 +559,13 @@ main {
   margin-top: 2rem;
 }
 
-#controls{
+#controls,
+#artist-controls,
+#set-controls,
+#nav-controls {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
 }
 
@@ -750,19 +803,7 @@ main {
 }
 
 .reprints-toggle {
-  min-height: 44px;
   margin: 8px 0;
-  padding: 10px 14px;
-  border: 1px solid #555;
-  border-radius: 6px;
-  background: #111;
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
-}
-
-.reprints-toggle:hover {
-  background: #2a2a2a;
 }
 
 .reprint {
@@ -806,6 +847,12 @@ main {
 /* =========================
    MOBILE
 ========================= */
+
+@media (max-width: 1100px) {
+  header {
+    flex-direction: column;
+  }
+}
 
 @media (max-width: 600px) {
 
@@ -893,13 +940,14 @@ main {
   }
 
   header {
-    flex-direction: column;
     padding: 10px;
   }
 
-  #controls {
-    flex-wrap: wrap;
-    gap: 5px;
+  #controls,
+  #artist-controls,
+  #set-controls,
+  #nav-controls {
+    gap: 6px;
   }
 
   .home-artworks {
