@@ -556,6 +556,7 @@ main {
 #home-link {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   min-height: 44px;
   color: #fff;
   font-family: "Koulen", sans-serif;
@@ -565,6 +566,18 @@ main {
   text-decoration: none;
   white-space: nowrap;
   transition: color 160ms ease;
+}
+
+.beta-ribbon {
+  display: inline-block;
+  padding: 0.18rem 0.35rem;
+  border: 1px solid #718590;
+  border-radius: 3px;
+  background: #35434b;
+  color: #e2edf2;
+  font: 400 0.6rem/1 "Roboto", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 #home-link:hover {
@@ -613,6 +626,10 @@ main {
 
 .home-artwork-column-center {
   padding-top: clamp(2rem, 5vw, 12rem);
+}
+
+.home-mobile-gallery {
+  display: none;
 }
 
 .home-artwork-frame {
@@ -1194,24 +1211,15 @@ main {
   }
 }
 
-@media (max-width: 600px) {
-
-  #controls {
-    width: 100%;
-  }
-
-  .modal {
-    padding: 12px;
-  }
-
+@media (max-width: 900px) {
   .modal.artwork-modal {
-    padding:
-      max(12px, env(safe-area-inset-top))
-      max(12px, env(safe-area-inset-right))
-      max(12px, env(safe-area-inset-bottom))
-      max(12px, env(safe-area-inset-left));
     box-sizing: border-box;
     align-items: stretch;
+    padding:
+      max(6px, env(safe-area-inset-top))
+      max(6px, env(safe-area-inset-right))
+      max(6px, env(safe-area-inset-bottom))
+      max(6px, env(safe-area-inset-left));
   }
 
   .artwork-modal-content {
@@ -1256,9 +1264,38 @@ main {
   }
 
   .artwork-modal .modal-close {
+    top: 4px;
+    right: auto;
     width: 48px;
     height: 48px;
     flex: 0 0 48px;
+    margin: 4px 4px -52px auto;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .modal-artwork {
+    min-height: 0;
+    max-height: none;
+  }
+
+  #modal-img {
+    max-height: none;
+  }
+}
+
+@media (max-width: 600px) {
+
+  #controls {
+    width: 100%;
+  }
+
+  .modal {
+    padding:
+      max(6px, env(safe-area-inset-top))
+      max(6px, env(safe-area-inset-right))
+      max(6px, env(safe-area-inset-bottom))
+      max(6px, env(safe-area-inset-left));
   }
 
   .reprint {
@@ -1328,56 +1365,59 @@ main {
 
   .home-gallery {
     --artwork-gap: 0.5rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 200%;
-    margin-inline: -50%;
+    display: block;
+    width: 100%;
+    margin-inline: 0;
   }
 
-  .home-artwork-column,
-  .home-center-artworks,
+  .home-artwork-column:first-child,
+  .home-artwork-column:nth-child(3),
+  .home-center-artworks {
+    display: none;
+  }
+
   .home-artwork-column-center {
     display: contents;
   }
 
   .home-intro {
-    grid-area: 1 / 1 / 2 / 4;
     box-sizing: border-box;
-    width: 50%;
-    justify-self: center;
     padding: 0 1.5rem 1rem;
   }
 
-  .home-artwork-column:first-child > .home-artwork-frame:first-child {
-    grid-area: 2 / 1;
+  .home-mobile-gallery {
+    display: block;
   }
 
-  .home-center-artworks > .home-artwork-frame:first-child {
-    grid-area: 2 / 2;
+  .home-swipe-hint {
+    margin: 0 1rem 0.75rem;
+    color: #bcbfc1;
+    font-size: 0.875rem;
   }
 
-  .home-artwork-column:last-child > .home-artwork-frame:first-child {
-    grid-area: 2 / 3;
+  .home-mobile-track {
+    display: flex;
+    align-items: center;
+    gap: var(--artwork-gap);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    padding: 0 1rem 0.75rem;
+    scroll-padding-inline: 1rem;
   }
 
-  .home-artwork-frame:nth-child(n + 2) {
+  .home-mobile-track:focus-visible {
+    outline: 2px solid #c1d1dc;
+    outline-offset: -2px;
+  }
+
+  .home-mobile-track .home-artwork-frame {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+  }
+
+  .home-artwork-caption {
     display: none;
-  }
-
-  .home-artwork-column:first-child .home-artwork-caption,
-  .home-artwork-column:last-child .home-artwork-caption {
-    box-sizing: border-box;
-    width: 25%;
-    padding: 1.5rem 0.3rem 0.5rem;
-    font-size: 0.7rem;
-    overflow-wrap: anywhere;
-  }
-
-  .home-artwork-column:first-child .home-artwork-caption {
-    left: auto;
-  }
-
-  .home-artwork-column:last-child .home-artwork-caption {
-    right: auto;
   }
 
 }
