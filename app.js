@@ -1,6 +1,8 @@
 let artists = [];
 let sets = [];
+let excludedSetCodes = new Set();
 let artistSlugOverrides = {};
+let artistArtworkAliases = {};
 
 const artistCache = new Map();
 const setCache = new Map();
@@ -19,6 +21,9 @@ const aboutLinkEl = document.getElementById("about-link");
 const defaultDocumentTitle = document.title;
 let homeViewRequest = 0;
 let homeArtworkSelectionPromise = null;
+let homeArtworkFrames = [];
+const homeMobileLayout = window.matchMedia("(max-width: 600px)");
+const homeColumnOrder = [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1];
 
 
 // ============================================================
@@ -44,7 +49,8 @@ async function mergeArtistLinks(linksRes) {
 
         artists.forEach(artist => {
 
-            const entry = linksBySlug[artistShardSlug(artist)];
+            const entry = linksBySlug[artistSlugOverrides[artist.name] || slugify(artist.name)]
+                || linksBySlug[artistShardSlug(artist)];
 
             if (!entry || typeof entry !== "object") {
                 return;
@@ -75,14 +81,16 @@ async function loadData() {
 
     try {
 
-        const [artistsRes, setsRes, manifestRes, linksRes] =
+        const [artistsRes, setsRes, manifestRes, linksRes, exclusionConfig, artworkAliases] =
             await Promise.all([
                 fetch("./data/artists.json?v=2"),
-                fetch("./data/sets.json"),
+                fetch("./data/sets.json?v=2"),
                 fetch("./data/manifest.json")
                     .catch(() => null),
                 fetch("./data/artist-links.json")
-                    .catch(() => null)
+                    .catch(() => null),
+                fetchJson("./data/excluded-sets.json?v=9"),
+                fetchJson("./data/artist-artwork-aliases.json?v=1")
             ]);
 
         if (!artistsRes.ok) {
@@ -94,7 +102,17 @@ async function loadData() {
         }
 
         artists = await artistsRes.json();
-        sets = await setsRes.json();
+        if (!artworkAliases || Array.isArray(artworkAliases) || typeof artworkAliases !== "object" ||
+            Object.entries(artworkAliases).some(([name, credit]) =>
+                !name.trim() || typeof credit !== "string" || !credit.trim())) {
+            throw new Error("Invalid artist artwork aliases");
+        }
+        artistArtworkAliases = artworkAliases;
+        const allSets = await setsRes.json();
+        excludedSetCodes = getExcludedSetCodes(allSets, exclusionConfig);
+        sets = allSets.filter(set =>
+            set.hasArtworks !== false && !excludedSetCodes.has(set.code.toLowerCase())
+        );
 
         if (manifestRes && manifestRes.ok) {
             const manifest = await manifestRes.json();
@@ -121,13 +139,45 @@ async function loadData() {
         const grid = document.getElementById("grid");
 
         if (grid) {
+            document.getElementById("home-page")?.classList.add("hidden");
+            document.getElementById("about-page")?.classList.add("hidden");
+            document.getElementById("gallery")?.classList.remove("hidden");
             grid.innerHTML = `
-                <p class="error">
+                <p class="error" role="alert">
                     Failed to load gallery data.
                 </p>
             `;
         }
     }
+}
+
+function getExcludedSetCodes(allSets, config) {
+    if (!Array.isArray(allSets) || !config || typeof config !== "object" ||
+        typeof config.excludeSetPromos !== "boolean" ||
+        typeof config.excludeWorldChampionshipDecks !== "boolean" ||
+        !Array.isArray(config.sets) ||
+        config.sets.some(set => !set || typeof set.code !== "string" ||
+            !/^[a-z0-9]+$/.test(set.code) || typeof set.name !== "string" || !set.name.trim())) {
+        throw new Error("Invalid excluded sets configuration");
+    }
+
+    const excluded = new Set(config.sets.map(set => set.code));
+    const byCode = new Map(allSets.map(set => [set.code.toLowerCase(), set]));
+    for (const set of allSets) {
+        const code = set.code.toLowerCase();
+        if (config.excludeWorldChampionshipDecks &&
+            /^World Championship Decks \d{4}$/i.test(set.name)) {
+            excluded.add(code);
+        }
+        if (config.excludeSetPromos && code.startsWith("p") && set.name.endsWith(" Promos")) {
+            const base = byCode.get(code.slice(1));
+            const promoName = set.name.slice(0, -" Promos".length);
+            if (base && (base.name === promoName || base.name.endsWith(`: ${promoName}`))) {
+                excluded.add(code);
+            }
+        }
+    }
+    return excluded;
 }
 
 
@@ -222,6 +272,23 @@ function hideAboutPage() {
     document.title = defaultDocumentTitle;
 }
 
+function layoutHomeArtworks() {
+    const container = document.getElementById("home-artworks");
+    const columns = container.querySelectorAll(".home-artwork-column");
+    const targets = [columns[0], container.querySelector(".home-center-artworks"), columns[2]];
+    const track = container.querySelector(".home-mobile-track");
+    const focused = document.activeElement;
+    const restoreFocus = homeArtworkFrames.includes(focused);
+
+    homeArtworkFrames.forEach((frame, index) => {
+        (homeMobileLayout.matches ? track : targets[homeColumnOrder[index]]).appendChild(frame);
+    });
+
+    if (restoreFocus) focused.focus({ preventScroll: true });
+}
+
+homeMobileLayout.addEventListener("change", layoutHomeArtworks);
+
 async function showHomePage() {
     const request = ++homeViewRequest;
     window.scrollTo(0, 0);
@@ -243,11 +310,15 @@ async function showHomePage() {
     clearArtistInfo();
     hideGridLoading();
     artworkTargets.forEach(target => target.replaceChildren());
+    const mobileTrack = artworkContainer.querySelector(".home-mobile-track");
+    mobileTrack.replaceChildren();
+    mobileTrack.scrollLeft = 0;
+    homeArtworkFrames = [];
     errorEl.classList.add("hidden");
 
     try {
         if (!homeArtworkSelectionPromise) {
-            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json?v=16")
+            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json?v=17")
                 .catch(error => {
                     homeArtworkSelectionPromise = null;
                     throw error;
@@ -278,8 +349,7 @@ async function showHomePage() {
         if (request !== homeViewRequest) return;
 
         let nextRevealAt = 0;
-        const columnOrder = [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1];
-        featured.forEach((artwork, index) => {
+        featured.forEach(artwork => {
             const frame = document.createElement("button");
             frame.className = "home-artwork-frame";
             frame.type = "button";
@@ -314,8 +384,9 @@ async function showHomePage() {
             frame.appendChild(image);
             frame.appendChild(caption);
             frame.addEventListener("click", () => openModal(artwork, frame));
-            artworkTargets[columnOrder[index]].appendChild(frame);
+            homeArtworkFrames.push(frame);
         });
+        layoutHomeArtworks();
     } catch (error) {
         console.error("Could not load featured artwork", error);
         if (request !== homeViewRequest) return;
@@ -343,8 +414,8 @@ function artistShardSlug(artistOrSlug) {
         return slugify(artistOrSlug);
     }
 
-    return artistSlugOverrides[artistOrSlug.name]
-        || slugify(artistOrSlug.name);
+    const credit = artistArtworkAliases[artistOrSlug.name] || artistOrSlug.name;
+    return artistSlugOverrides[credit] || slugify(credit);
 }
 
 async function fetchJson(url) {
@@ -390,8 +461,7 @@ function getArtistArtworks(artistOrSlug) {
     return cachedFetch(
         artistCache,
         slug,
-        `./data/artists/${encodeURIComponent(slug)}.json`,
-        []
+        `./data/artists/${encodeURIComponent(slug)}.json`
     );
 }
 
@@ -454,6 +524,10 @@ function findArtist(value) {
     return artists.find(
         artist =>
             slugify(artist.name) === slug
+    ) || artists.find(
+        artist =>
+            artistArtworkAliases[artist.name] &&
+            slugify(artistArtworkAliases[artist.name]) === slug
     );
 }
 
@@ -537,6 +611,10 @@ async function loadArtist(
     hideAboutPage();
     currentArtist = artist;
     currentSet = null;
+    const title = document.getElementById("title");
+    if (title) {
+        title.textContent = artist.name;
+    }
 
     if (updateUrl) {
 
@@ -562,7 +640,9 @@ async function loadArtist(
 
         if (currentArtist === artist) {
             showGridError(
-                "Failed to load artworks."
+                error.status === 404
+                    ? "Artwork data is not available for this artist."
+                    : "Failed to load artworks."
             );
         }
 
@@ -793,6 +873,11 @@ async function loadSet(
     hideAboutPage();
     currentSet = set;
     currentArtist = null;
+    const title = document.getElementById("title");
+    if (title) {
+        title.textContent = set.name;
+    }
+    clearArtistInfo();
 
     if (updateUrl) {
 
@@ -832,19 +917,6 @@ async function loadSet(
 
     currentCards =
         setArtworks;
-
-    const title =
-        document.getElementById(
-            "title"
-        );
-
-    if (title) {
-
-        title.textContent =
-            set.name;
-    }
-
-    clearArtistInfo();
 
     renderGrid(
         setArtworks
@@ -886,6 +958,7 @@ function renderGrid(artworkList) {
 
     if (!groups.length) {
         hideGridLoading();
+        grid.innerHTML = '<p class="error">No artworks are available for this view.</p>';
         return;
     }
 
@@ -1041,7 +1114,7 @@ async function openModal(
 
 
     const cards =
-        artwork.cards || [];
+        (artwork.cards || []).filter(card => !excludedSetCodes.has(card.setCode?.toLowerCase()));
 
 
     info.innerHTML = `

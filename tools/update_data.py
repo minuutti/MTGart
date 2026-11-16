@@ -945,6 +945,10 @@ def main():
         artworks_list
     )
 
+    for set_record in sets_list:
+        if set_record["code"].lower() not in by_set:
+            set_record["hasArtworks"] = False
+
     write_json(
         SETS_FILE,
         sets_list

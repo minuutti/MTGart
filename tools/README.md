@@ -6,6 +6,9 @@ Utility scripts for generating and maintaining project data.
 
 Builds `data/artists/<slug>.json`, `data/sets/<code>.json`, `data/sets.json` and `data/manifest.json` from the local Scryfall bulk JSONL file.
 
+Sets without an artwork shard are marked with `hasArtworks: false` in `data/sets.json` and are not selectable in the gallery.
+After regenerating the data, increment the query version for `sets.json` in `app.js` and the `app.js` query version in `index.html` so browsers fetch the updated index.
+
 Expected input file:
 
 - `tools/data/all-cards.jsonl`
@@ -36,6 +39,23 @@ Format: an object keyed by artist slug (as used in `?artist=`), each value an ob
 ```
 
 Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`. Values must be `https://` URLs and the slug must exist in `data/artists.json`. Only add URLs you have checked.
+
+## Artist artwork aliases
+
+`data/artist-artwork-aliases.json` maps names in `data/artists.json` to the corresponding artist credits used in generated artwork shards. Add a mapping only when the two credits refer to the same artist; the mapping does not change the artist's existing URL. This file is hand-maintained and not overwritten by `update_data.py`.
+
+After editing the aliases, increment the query version for `artist-artwork-aliases.json` in `app.js`, and the `app.js` query version in `index.html`.
+Run `node tests/test_artist_aliases.js` to check that each alias resolves to a shard with the expected credit.
+
+## Set exclusions
+
+`data/excluded-sets.json` is hand-maintained and is not changed by `update_data.py`. Add entries to its `sets` array with the lowercase Scryfall set `code` and a descriptive `name`. Excluded sets are hidden from search, random selection, direct set routes, and artwork “Printed in” lists; artwork itself remains available.
+
+`excludeWorldChampionshipDecks` hides sets named `World Championship Decks` followed by a four-digit year. `excludeSetPromos` hides sets whose name ends in ` Promos` and whose code is `p` plus an existing base-set code, provided the base name matches the promo name (or ends with it after a colon). This covers set-specific promo collections, including supplemental sets, while leaving unrelated promotional collections visible. Set either option to `false` to disable its rule; use explicit entries for additional exclusions. Removing an explicit entry does not restore a set if it still matches an enabled rule. Check `data/sets.json` for codes and names.
+
+After editing the exclusions, increment the query version for `excluded-sets.json` in `app.js`, and increment the `app.js` query version in `index.html` so browsers fetch the update.
+
+Run `node tests/test_excluded_sets.js` to check the configuration and exclusion rules against the current set index.
 
 ## Home artwork selection
 

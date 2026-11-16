@@ -93,6 +93,7 @@ class HomeArtworkSelectionTest(unittest.TestCase):
             ("Phantom Tiger", "Seb McKinnon"),
             ("Sterling Grove", "Seb McKinnon"),
             ("Congregate", "Mark Zug"),
+            ("Thwart the Grave", "Wylie Beckert"),
         }
         selection = json.loads((ROOT / "data/home-artworks.json").read_text())
         actual = set()
