@@ -1,8 +1,8 @@
-# MTG Artist Gallery
+# MTG Unframed
 
 ## Overview
 
-MTG Artist Gallery is a visual exploration of the artists behind Magic: The Gathering.
+MTG Unframed is a visual exploration of the artists behind Magic: The Gathering.
 
 The project is not primarily a card database. Its purpose is to bring the artists to the foreground and make it possible to explore their work across different sets, eras, styles, and artistic directions.
 

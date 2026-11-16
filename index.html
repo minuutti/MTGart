@@ -7,12 +7,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MTG Artist Gallery</title>
+    <title>MTG Unframed</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Playfair+Display:wght@400&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=visual-updates-6">
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Playfair+Display:wght@400&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=visual-updates-17">
 
 </head>
 
@@ -25,11 +25,11 @@
 
 <header>
     <div id="site-title">
-        <a id="home-link" href="./">Art of Magic</a>
+        <a id="home-link" href="./">MTG Unframed</a>
         <section class="page-heading">
 
             <h1 id="title">
-                MTG Artist Gallery
+                MTG Unframed
             </h1>
 
             <a id="artist-info-btn" class="artist-info-link hidden" href="#artist-info">
@@ -38,14 +38,17 @@
 
         </section>
     </div>
-    <div id="controls">
+    <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="controls">
+        <span class="menu-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <nav id="controls" aria-label="Main navigation">
         <div id="artist-controls">
 
-            <button id="random-artist" class="site-button">
+            <button id="random-artist" type="button">
                 Random Artist
             </button>
 
-            <button id="search-artist" class="site-button">
+            <button id="search-artist" type="button">
                 Search Artist
             </button>
 
@@ -53,11 +56,11 @@
 
         <div id="set-controls">
 
-            <button id="random-set" class="site-button">
+            <button id="random-set" type="button">
                 Random Set
             </button>
 
-            <button id="search-set" class="site-button">
+            <button id="search-set" type="button">
                 Search Set
             </button>
 
@@ -65,12 +68,12 @@
 
         <div id="nav-controls">
 
-            <a id="about-link" class="site-button" href="?page=about">
+            <a id="about-link" href="?page=about">
                 About
             </a>
 
         </div>
-    </div>
+    </nav>
 
 
 </header>
@@ -85,7 +88,7 @@
         <section id="home-page" class="home-page hidden" aria-labelledby="home-title">
             <div class="home-hero">
                 <div class="home-hero-copy">
-                    <h1 id="home-title">Art of Magic</h1>
+                    <h1 id="home-title">MTG Unframed</h1>
                     <div class="home-actions">
                         <button class="site-button" data-home-action="search-artist" type="button">Search Artist</button>
                         <button class="site-button" data-home-action="search-set" type="button">Search Set</button>
@@ -99,7 +102,7 @@
                     <div class="home-artwork-column home-artwork-column-center">
                         <div class="home-intro">
                             <h2>This is a gallery, not a card database</h2>
-                            <p>Thousands of artists have shaped the look of Magic: The Gathering. This gallery brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined.</p>
+                            <p>Thousands of artists have shaped the look of Magic: The Gathering. MTG Unframed brings them forward: follow one artist across sets and years, or travel through the game’s history by the worlds, styles, and creatures they imagined. There is no rules text, no prices, and no deck tools here, just the art and the people who made it. Stay a while and enjoy it.</p>
                         </div>
                         <div class="home-center-artworks"></div>
                     </div>
@@ -149,17 +152,23 @@
         </section>
 
         <article id="about-page" class="about-page hidden" aria-labelledby="about-title">
-            <h1 id="about-title">About MTG Artist Gallery</h1>
+            <h1 id="about-title">About MTG Unframed</h1>
 
-            <p>The artists have always been one of my favorite parts of Magic: The Gathering. This project started from a simple desire to see their work together — not as isolated cards, but as bodies of work that span sets, years, and changing visual directions.</p>
+            <p>The artists have always been one of my favorite parts of Magic: The Gathering. This project started from a simple wish: to see their work together, not as isolated cards, but as bodies of work that span sets, years, and changing visual directions.</p>
 
             <h2>Look beyond the card</h2>
 
-            <h3>The people behind the images</h3>
+            <p>Thousands of artists have shaped the visual identity of Magic. Their work tells the story of the game’s history, but it can easily disappear behind the frame, the text box, and the mana cost.</p>
 
-            <p>Thousands of artists have helped shape the visual identity of Magic. Their work tells stories of the game's history that can easily disappear behind the cards themselves.</p>
+            <h2>Beautiful Art, Forgotten Cards</h2>
 
-            <p>This gallery is a place to bring those artists forward, explore their contributions, and simply spend some time looking at the art.</p>
+            <p>In play, a card is judged by what it does: is it strong, is it playable, is it still legal? Here, none of that matters. MTG Unframed gives you room to look at the art for its own sake, without thinking about mechanics or whether the card is any good. Some of Magic’s most beautiful pieces belong to cards that rarely see play or have long been forgotten. When a card stops being relevant, its art shouldn’t be forgotten with it.</p>
+
+            <h2>Art Across the Years</h2>
+
+            <p>MTG Unframed brings those artists forward. Follow one artist across different worlds and eras, or move between sets and watch the style of the game change over time.</p>
+
+            <p>This is a gallery, not a card database. You won’t find rules text, prices, or deck tools here, just the art and the people who made it. Stay a while and enjoy it.</p>
         </article>
 
     </main>
@@ -167,7 +176,7 @@
     <footer class="site-footer">
         <div class="site-footer-inner">
             <div class="site-footer-brand">
-                <p class="site-footer-name">Art of Magic</p>
+                <p class="site-footer-name">MTG Unframed</p>
                 <p class="site-footer-slogan">Discover the artists behind the worlds.</p>
             </div>
             <p class="site-footer-disclaimer">Unofficial fan project, not affiliated with Wizards of the Coast. Card art belongs to its respective artists and Wizards of the Coast.</p>
@@ -340,7 +349,7 @@
          JAVASCRIPT
     ====================================================== -->
 
-    <script src="app.js?v=visual-updates-3"></script>
+    <script src="app.js?v=visual-updates-25"></script>
 
 </body>
 

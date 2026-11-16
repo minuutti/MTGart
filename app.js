@@ -77,7 +77,7 @@ async function loadData() {
 
         const [artistsRes, setsRes, manifestRes, linksRes] =
             await Promise.all([
-                fetch("./data/artists.json"),
+                fetch("./data/artists.json?v=2"),
                 fetch("./data/sets.json"),
                 fetch("./data/manifest.json")
                     .catch(() => null),
@@ -134,6 +134,8 @@ async function loadData() {
 // ============================================================
 // URL ROUTING
 // ============================================================
+
+history.scrollRestoration = "manual";
 
 function getRoute() {
     const params = new URLSearchParams(window.location.search);
@@ -196,12 +198,13 @@ function loadInitialView() {
 
 function showAboutPage() {
     homeViewRequest++;
+    window.scrollTo(0, 0);
     document.getElementById("home-page")?.classList.add("hidden");
     document.getElementById("gallery")?.classList.add("hidden");
     document.querySelector(".page-heading")?.classList.add("hidden");
     document.getElementById("about-page")?.classList.remove("hidden");
     animatePageTitle(document.querySelector("#about-page h1"));
-    document.title = "About — MTG Artist Gallery";
+    document.title = "About — MTG Unframed";
 
     currentArtist = null;
     currentSet = null;
@@ -221,6 +224,7 @@ function hideAboutPage() {
 
 async function showHomePage() {
     const request = ++homeViewRequest;
+    window.scrollTo(0, 0);
     const homePage = document.getElementById("home-page");
     const artworkContainer = document.getElementById("home-artworks");
     const artworkColumns = artworkContainer.querySelectorAll(".home-artwork-column");
@@ -243,7 +247,7 @@ async function showHomePage() {
 
     try {
         if (!homeArtworkSelectionPromise) {
-            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json?v=3")
+            homeArtworkSelectionPromise = fetchJson("./data/home-artworks.json?v=16")
                 .catch(error => {
                     homeArtworkSelectionPromise = null;
                     throw error;
@@ -1048,6 +1052,11 @@ async function openModal(
             )}
         </h3>
 
+        ${
+            Number.isInteger(artwork.firstYear) && artwork.firstYear > 0
+                ? `<p class="modal-first-print">First print ${artwork.firstYear}</p>`
+                : ""
+        }
 
         <p>
 
@@ -1103,7 +1112,7 @@ async function openModal(
                         aria-expanded="false"
                         aria-controls="artwork-reprints"
                     >
-                        Show reprints (${cards.length})
+                        Printed in (${cards.length})
                     </button>
 
                     <div
@@ -1112,7 +1121,7 @@ async function openModal(
                         hidden
                     >
 
-                        <h4>Reprints</h4>
+                        <h4>Printed in</h4>
 
                         ${cards.map(
                             card => {
@@ -1125,7 +1134,7 @@ async function openModal(
 
                                 return `
                                     <div class="reprint">
-                                        <strong>${escapeHtml(card.name)}</strong>
+                                        ${card.name !== sample?.name ? `<strong>${escapeHtml(card.name)}</strong>` : ""}
                                         <span>
                                             <a
                                                 href="#"
@@ -1137,7 +1146,6 @@ async function openModal(
                                                 ${escapeHtml(setName)}
                                             </a>
                                             ${card.year ? ` (${card.year})` : ""}
-                                            — ${escapeHtml(card.rarity)}
                                         </span>
                                     </div>
                                 `;
@@ -1157,8 +1165,8 @@ async function openModal(
             const expanded = reprintsToggle.getAttribute("aria-expanded") === "true";
             reprintsToggle.setAttribute("aria-expanded", String(!expanded));
             reprintsToggle.textContent = expanded
-                ? `Show reprints (${cards.length})`
-                : "Hide reprints";
+                ? `Printed in (${cards.length})`
+                : "Hide printings";
             info.querySelector("#artwork-reprints").hidden = expanded;
         });
     }
@@ -1269,7 +1277,7 @@ function showArtistSearch() {
         return;
     }
 
-    artistSearchTrigger = document.activeElement;
+    artistSearchTrigger = getSearchTrigger();
     modal.classList.remove(
         "hidden"
     );
@@ -1482,6 +1490,11 @@ function renderArtistList(
 
 function setupArtistSearch() {
 
+    const modal = document.getElementById("ArtistSearchModal");
+    modal?.addEventListener("click", event => {
+        if (event.target === modal) closeArtistSearch();
+    });
+
     const input =
         document.getElementById(
             "artist-search"
@@ -1548,7 +1561,7 @@ function showSetSearch() {
         return;
     }
 
-    setSearchTrigger = document.activeElement;
+    setSearchTrigger = getSearchTrigger();
     modal.classList.remove(
         "hidden"
     );
@@ -1657,6 +1670,11 @@ function renderSetList(list) {
 
 function setupSetSearch() {
 
+    const modal = document.getElementById("SetSearchModal");
+    modal?.addEventListener("click", event => {
+        if (event.target === modal) closeSetSearch();
+    });
+
     const input =
         document.getElementById(
             "set-search"
@@ -1714,6 +1732,8 @@ function setupSetSearch() {
 // ============================================================
 
 function showGridLoading() {
+
+    window.scrollTo(0, 0);
 
     const loading =
         document.getElementById(
@@ -1789,6 +1809,15 @@ function escapeHtml(
 // SEARCH BUTTONS
 // ============================================================
 
+function getSearchTrigger() {
+    const active = document.activeElement;
+    const menuToggle = document.getElementById("menu-toggle");
+    if (active instanceof HTMLElement && active.closest("#controls") &&
+        menuToggle && getComputedStyle(menuToggle).display !== "none") {
+        return menuToggle;
+    }
+    return active;
+}
 
 document.getElementById("search-artist")?.addEventListener(
         "click",
@@ -1870,6 +1899,10 @@ function setupHeaderScroll() {
     function update() {
         ticking = false;
         const y = Math.max(window.scrollY, 0);
+        if (document.getElementById("menu-toggle")?.getAttribute("aria-expanded") === "true") {
+            lastScrollY = y;
+            return;
+        }
         const delta = y - lastScrollY;
 
         if (y <= 0) {
@@ -1894,9 +1927,49 @@ function setupHeaderScroll() {
     }, { passive: true });
 }
 
+function setupMobileMenu() {
+    const toggle = document.getElementById("menu-toggle");
+    const controls = document.getElementById("controls");
+    if (!toggle || !controls) return;
+
+    function closeMenu(restoreFocus = false) {
+        controls.classList.remove("menu-open");
+        toggle.setAttribute("aria-expanded", "false");
+        if (restoreFocus) toggle.focus();
+    }
+
+    toggle.addEventListener("click", () => {
+        const opening = toggle.getAttribute("aria-expanded") !== "true";
+        controls.classList.toggle("menu-open", opening);
+        toggle.setAttribute("aria-expanded", String(opening));
+    });
+    controls.addEventListener("click", event => {
+        if (event.target.closest("button, a")) {
+            closeMenu(getComputedStyle(toggle).display !== "none" && controls.contains(document.activeElement));
+        }
+    });
+    document.addEventListener("click", event => {
+        if (!controls.contains(event.target) && !toggle.contains(event.target)) closeMenu();
+    });
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+            event.preventDefault();
+            closeMenu(true);
+        }
+    });
+    window.addEventListener("popstate", () => closeMenu());
+    window.matchMedia("(max-width: 1100px)").addEventListener("change", event => {
+        const focusWasInMenu = controls.contains(document.activeElement);
+        const focusWasOnToggle = document.activeElement === toggle;
+        closeMenu(event.matches && focusWasInMenu);
+        if (!event.matches && focusWasOnToggle) controls.querySelector("button, a")?.focus();
+    });
+}
+
 function init() {
 
     setupHeaderScroll();
+    setupMobileMenu();
 
     setupModal();
     setupArtistSearch();
