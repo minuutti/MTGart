@@ -1,4 +1,4 @@
-# MTG Artist Gallery — Architecture
+# MTG Unframed — Architecture
 
 ## Technology
 

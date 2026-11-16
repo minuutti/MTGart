@@ -27,7 +27,6 @@ class HomeArtworkSelectionTest(unittest.TestCase):
             ("Contagion", "Mike Raabe"),
             ("Bitterblossom", "Rebecca Guay"),
             ("Mountain", "John Avon"),
-            ("Ad Nauseam", "Jeremy Jarvis"),
             ("Gaea's Balance", "Rebecca Guay"),
             ("Phyrexian Unlife", "Jason Chan"),
             ("Thoughtseize", "Aleksi Briclot"),
@@ -73,6 +72,27 @@ class HomeArtworkSelectionTest(unittest.TestCase):
             ("Recumbent Bliss", "Todd Lockwood"),
             ("Suture Spirit", "Larry MacDougall"),
             ("Quicksilver Fountain", "Trevor Hairsine"),
+            ("Wall of Vipers", "Marc Fishman"),
+            ("Island", "Ku Xueming"),
+            ("Cloistered Youth // Unholy Fiend", "Igor Kieryluk"),
+            ("Emerald Dragonfly", "Quinton Hoover"),
+            ("The Abyss", "Pete Venters"),
+            ("Sacred Excavation", "Noah Bradley"),
+            ("Mind Bend", "Mike Dringenberg"),
+            ("Arenson's Aura", "D. Alexander Gregory"),
+            ("Fog", "Harold McNeill"),
+            ("Basalt Golem", "Scott Kirschner"),
+            ("Terror", "Adam Rex"),
+            ("Airtight Alibi", "Jeremy Wilson"),
+            ("Meadowboon", "Steven Belledin"),
+            ("Plains", "Christopher Rush"),
+            ("Bounty Hunter", "Brian Snõddy"),
+            ("Temporal Extortion", "Steven Belledin"),
+            ("Surgical Extraction", "Steven Belledin"),
+            ("Cultivator Colossus", "Nils Hamm"),
+            ("Phantom Tiger", "Seb McKinnon"),
+            ("Sterling Grove", "Seb McKinnon"),
+            ("Congregate", "Mark Zug"),
         }
         selection = json.loads((ROOT / "data/home-artworks.json").read_text())
         actual = set()
@@ -88,6 +108,7 @@ class HomeArtworkSelectionTest(unittest.TestCase):
         cases = [
             ("20c3148e-70bc-4750-b51b-a4815278828c", "alayna-danner", "Evolving Wilds", "woe"),
             ("c0675583-b5c8-40ab-ab0a-585396f156b5", "john-avon", "Plains", "m15"),
+            ("8877694e-5dfd-4390-b326-7b81701a3ce1", "christopher-rush", "Plains", "ice"),
         ]
         for artwork_id, slug, name, set_code in cases:
             with self.subTest(name=name):
@@ -102,6 +123,17 @@ class HomeArtworkSelectionTest(unittest.TestCase):
         self.assertIn({
             "illustration_id": "89549c3b-1ce0-4c8b-88d5-8fc0931d1c10",
             "artistSlug": "sam-burley",
+        }, selection)
+
+    def test_selected_island_and_cloistered_youth_artworks(self):
+        selection = json.loads((ROOT / "data/home-artworks.json").read_text())
+        self.assertIn({
+            "illustration_id": "8053b944-f9cb-4751-b77f-6e6b87f2af1b",
+            "artistSlug": "ku-xueming",
+        }, selection)
+        self.assertIn({
+            "illustration_id": "6556f870-50b0-429c-809e-33f14a0e78c5",
+            "artistSlug": "igor-kieryluk",
         }, selection)
 
     def test_john_avon_mountain_is_the_selected_urzas_saga_artwork(self):
