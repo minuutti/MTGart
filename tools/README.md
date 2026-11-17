@@ -38,7 +38,7 @@ Format: an object keyed by artist slug (as used in `?artist=`), each value an ob
 }
 ```
 
-Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`. Values must be `https://` URLs and the slug must exist in `data/artists.json`. Only add URLs you have checked.
+Allowed keys: `website`, `wikipedia`, `instagram`, `twitter`, `bluesky`, `artstation`, `facebook`, `youtube`, `patreon`, `store`, `tiktok`. Values must be `https://` URLs and the slug must exist in `data/artists.json`. Only add URLs you have checked.
 
 ## Artist artwork aliases
 

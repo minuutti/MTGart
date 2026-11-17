@@ -1,1 +1,36 @@
-{}
+{
+  "mark-poole": {
+    "website": "https://markpoole.com/",
+    "instagram": "https://www.instagram.com/markpooleartist"
+  },
+  "randy-rk-post": {
+    "website": "https://www.rkpost.net/",
+    "instagram": "https://www.instagram.com/postrk/",
+    "tiktok": "https://www.tiktok.com/@rk.post8"
+  },
+  "christopher-moeller": {
+    "website": "https://moellerillustrations.com/"
+  },
+  "vincent-proce": {
+    "website": "https://www.vincentproce.com/",
+    "instagram": "https://www.instagram.com/vproceart/"
+  },
+  "daniel-ljunggren": {
+    "website": "https://darylart.com/"
+  },
+  "thomas-m-baxa": {
+    "website": "https://baxaart.myshopify.com/"
+  },
+  "jesper-ejsing": {
+    "website": "https://jesperejsing.com/"
+  },
+  "svetlin-velinov": {
+    "artstation": "https://www.artstation.com/velinov"
+  },
+  "adam-rex": {
+    "website": "https://www.adamrex.com/"
+  },
+  "carl-critchlow": {
+    "website": "https://www.carlcritchlow.com/"
+  }
+}

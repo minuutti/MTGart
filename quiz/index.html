@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Test your Magic: The Gathering art knowledge in the MTG Unframed Art Quiz.">
+    <title>Art Quiz — MTG Unframed</title>
+    <link rel="stylesheet" href="quiz.css?v=1">
+</head>
+<body>
+    <header class="quiz-header">
+        <a class="brand" href="../">MTG Unframed <span>Art Quiz</span></a>
+        <a class="back-link" href="../">Back to gallery</a>
+    </header>
+
+    <main class="quiz-main">
+        <section id="setup-screen" class="panel setup-panel" aria-labelledby="setup-title">
+            <p class="eyebrow">A solo beta</p>
+            <h1 id="setup-title" tabindex="-1">How well do you know the art?</h1>
+            <p class="intro">Study each illustration and name the card and set. Card name answers are worth 5 points; set answers are worth 1.</p>
+
+            <form id="setup-form">
+                <fieldset class="year-fields">
+                    <legend>Choose printing years</legend>
+                    <label>
+                        From
+                        <select id="year-from" required></select>
+                    </label>
+                    <label>
+                        To
+                        <select id="year-to" required></select>
+                    </label>
+                </fieldset>
+                <label class="question-count-label" for="question-count">Number of questions</label>
+                <input id="question-count" type="number" min="1" value="10" required>
+                <p id="availability" class="hint" aria-live="polite"></p>
+                <p id="setup-error" class="error" role="alert" hidden></p>
+                <button class="primary-button" type="submit">Start quiz</button>
+            </form>
+            <p id="data-error" class="error" role="alert" hidden></p>
+        </section>
+
+        <section id="question-screen" class="panel question-panel" aria-labelledby="question-title" hidden>
+            <div class="question-topline">
+                <p id="question-progress" class="eyebrow"></p>
+                <p id="question-score" class="score-preview"></p>
+            </div>
+            <h1 id="question-title" class="visually-hidden">Identify this artwork</h1>
+            <figure class="quiz-artwork">
+                <img id="question-image" src="" alt="">
+                <figcaption id="question-attribution"></figcaption>
+            </figure>
+            <form id="answer-form">
+                <label for="card-answer">Card name <span>5 points</span></label>
+                <input id="card-answer" name="card" type="text" maxlength="100" autocomplete="off" required>
+                <label for="set-answer">Set <span>1 point</span></label>
+                <select id="set-answer" name="set" required>
+                    <option value="">Choose a set</option>
+                </select>
+                <button id="submit-answer" class="primary-button" type="submit">Lock answer</button>
+                <button id="next-question" class="secondary-button" type="button" hidden>Next question</button>
+            </form>
+        </section>
+
+        <section id="results-screen" class="panel results-panel" aria-labelledby="results-title" hidden>
+            <p class="eyebrow">Quiz complete</p>
+            <h1 id="results-title">Your results</h1>
+            <p id="final-score" class="final-score"></p>
+            <div id="answer-review" class="answer-review"></div>
+            <button id="play-again" class="primary-button" type="button">Play again</button>
+        </section>
+    </main>
+
+    <footer class="quiz-footer">
+        <p>Artwork belongs to its respective artists and Wizards of the Coast. This is an unofficial fan project.</p>
+    </footer>
+    <script src="quiz.js?v=1"></script>
+</body>
+</html>
