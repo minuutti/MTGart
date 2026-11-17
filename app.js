@@ -32,7 +32,7 @@ const homeColumnOrder = [0, 2, 1, 0, 2, 1, 0, 2, 1, 0, 2, 1];
 
 const ARTIST_LINK_KEYS = [
     "website", "wikipedia", "instagram", "twitter", "bluesky",
-    "artstation", "facebook", "youtube", "patreon", "store"
+    "artstation", "facebook", "youtube", "patreon", "store", "tiktok"
 ];
 
 // Attaches hand-maintained links (data/artist-links.json) to artists by slug.
@@ -684,6 +684,27 @@ function renderArtistInfo(artist) {
         return;
     }
 
+    const bioParagraphs = typeof artist.bio === "string"
+        ? artist.bio.split(/\n\s*\n/).map(paragraph => paragraph.trim()).filter(Boolean)
+        : [];
+    const linkLabels = {
+        website: "Website",
+        wikipedia: "Wikipedia",
+        instagram: "Instagram",
+        twitter: "X (Twitter)",
+        bluesky: "Bluesky",
+        artstation: "ArtStation",
+        facebook: "Facebook",
+        youtube: "YouTube",
+        patreon: "Patreon",
+        store: "Store",
+        tiktok: "TikTok"
+    };
+    const links = Object.entries(artist.links || {})
+        .filter(([key, url]) =>
+            linkLabels[key] && typeof url === "string" && url.startsWith("https://")
+        );
+
     // Populate the modal content
     artistInfoContentEl.innerHTML = `
         <div class="artist-info-card">
@@ -745,11 +766,30 @@ function renderArtistInfo(artist) {
                 }
 
                 ${
-                    artist.bio
+                    bioParagraphs.length
                     ? `
-                        <p>
-                            ${escapeHtml(artist.bio)}
-                        </p>
+                        <div class="artist-bio">
+                            ${bioParagraphs.map(paragraph => `
+                                <p>${escapeHtml(paragraph)}</p>
+                            `).join("")}
+                        </div>
+                    `
+                    : ""
+                }
+
+                ${
+                    links.length
+                    ? `
+                        <nav class="artist-info-links" aria-label="More about ${escapeHtml(artist.name)}">
+                            ${links.map(([key, url]) => `
+                                <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+                                    ${linkLabels[key]}
+                                    <svg class="external-link-icon" aria-hidden="true" viewBox="0 0 16 16" focusable="false">
+                                        <path d="M9 2h5v5M14 2 7 9M12 9v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4" />
+                                    </svg>
+                                </a>
+                            `).join("")}
+                        </nav>
                     `
                     : ""
                 }

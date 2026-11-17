@@ -1053,6 +1053,54 @@ main {
   line-height: 1.15;
 }
 
+.artist-bio p {
+  margin: 0 0 1rem;
+}
+
+.artist-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.artist-info-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: 1.25rem;
+}
+
+.artist-info-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 44px;
+  color: #c1d1dc;
+  text-decoration: underline;
+  text-decoration-color: #81919b;
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.external-link-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.artist-info-links a:hover {
+  color: #f0f5f8;
+  text-decoration-color: currentColor;
+}
+
+.artist-info-links a:focus-visible {
+  outline: 2px solid #c1d1dc;
+  outline-offset: 3px;
+}
+
 .artist-info-portrait {
   display: block;
   width: min(100%, 180px);

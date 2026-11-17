@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED = {
     "website", "wikipedia", "instagram", "twitter", "bluesky",
-    "artstation", "facebook", "youtube", "patreon", "store",
+    "artstation", "facebook", "youtube", "patreon", "store", "tiktok",
 }
 
 
