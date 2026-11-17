@@ -2,6 +2,8 @@
 
 The quiz is a standalone, solo-play static app served at `/quiz/`. It reads only its own generated `data/questions.json`; the gallery application files are not used or modified by the quiz UI. It has no room codes or shared multiplayer state.
 
+The gallery and quiz pages are marked `noindex` for search engines. The repository `robots.txt` also blocks named AI crawlers and unknown crawlers while permitting major search bots to read the `noindex` metadata. For this policy to apply, deploy `robots.txt` at the web origin root (`https://example.com/robots.txt`); if the app is hosted under a path prefix, adjust the robots paths to match that prefix. Robots directives are voluntary and cannot prevent non-compliant crawlers or direct downloads.
+
 ## Build quiz data
 
 From the repository root, run:
