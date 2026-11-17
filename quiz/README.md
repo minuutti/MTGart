@@ -12,7 +12,7 @@ python3 quiz/tools/build_data.py
 
 The builder reads the existing `data/artists/*.json` shards and writes a compact quiz index to `quiz/data/questions.json`. It keeps one question per unique artwork and its valid named printings. Re-run it after refreshing gallery artwork data. No card type or color is required.
 
-The quiz asks for a card name and lets the player choose a set from a dropdown populated with sets that have printings in the selected year range. Card names are accepted at 80% normalized Levenshtein similarity; set names are matched case-insensitively after punctuation and whitespace normalization. A correct card name is worth 5 points, and a correct set is worth 1 point. Answers and totals are evaluated in the browser because this version is single-player.
+The quiz asks for a card name and lets the player choose a set from a dropdown populated with sets that have printings in the selected year range. For each question, any set where that artwork has a printing within the selected year range is accepted; the results list all accepted sets. Card names are accepted at 80% normalized Levenshtein similarity; set names are matched case-insensitively after punctuation and whitespace normalization. A correct card name is worth 5 points, and a correct set is worth 1 point. Answers and totals are evaluated in the browser because this version is single-player.
 
 ## Multiplayer later
 

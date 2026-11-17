@@ -133,7 +133,9 @@ function showQuestion() {
     question.correct = {
         name: printing.name,
         set: printing.set,
-        year: printing.year
+        year: printing.year,
+        sets: [...new Set(question.eligiblePrintings.map(eligiblePrinting => eligiblePrinting.set))]
+            .sort((a, b) => a.localeCompare(b))
     };
     setupScreen.hidden = true;
     resultsScreen.hidden = true;
@@ -143,7 +145,7 @@ function showQuestion() {
 
 function scoreAnswer(question, card, set) {
     const nameCorrect = isNameCorrect(card, question.correct.name);
-    const setCorrect = isSetCorrect(set, question.correct.set);
+    const setCorrect = question.correct.sets.some(acceptedSet => isSetCorrect(set, acceptedSet));
     return {
         card,
         set,
@@ -186,7 +188,7 @@ function renderResults() {
         strong.textContent = `${index + 1}. ${question.correct.name}`;
         title.appendChild(strong);
         const set = document.createElement("p");
-        set.textContent = `${question.correct.set} (${question.correct.year})`;
+        set.textContent = `Accepted sets: ${question.correct.sets.join(", ")}`;
         const response = document.createElement("p");
         response.textContent =
             `Your answers: ${question.answer.card || "—"} / ${question.answer.set || "—"}`;
